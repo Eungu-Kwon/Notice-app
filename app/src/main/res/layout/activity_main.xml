@@ -8,7 +8,8 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_height="300dp"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -34,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:text="제거"/>
 
                 <Button
@@ -42,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     android:text="설정" />
 
                 <Switch
@@ -61,18 +62,17 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/alarmlist"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            >
+
+        </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:src="@android:drawable/ic_input_add"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:clickable="true" />
 </android.support.design.widget.CoordinatorLayout>

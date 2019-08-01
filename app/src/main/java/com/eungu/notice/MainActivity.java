@@ -5,11 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.eungu.notice.list_maker.AlarmListAdapter;
+import com.eungu.notice.list_maker.AlarmListItem;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO make setting
+                Intent intent = new Intent(getApplicationContext(), AlarmSettingActivity.class);
+                startActivity(intent);
                 Toast.makeText(getApplicationContext(), "setting button clicked", Toast.LENGTH_SHORT).show();
             }
         });
@@ -42,8 +51,22 @@ public class MainActivity extends AppCompatActivity {
                     stopService(main_service);
             }
         });
+
+        ArrayList<AlarmListItem> list = new ArrayList<>();
+        for(int i = 1; i <= 17; i++){
+            AlarmListItem item = new AlarmListItem();
+            item.setTitle(i + "번째");
+            list.add(item);
+        }
+
+        RecyclerView recyclerView = findViewById(R.id.alarmlist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        AlarmListAdapter listAdapter = new AlarmListAdapter(list);
+        recyclerView.setAdapter(listAdapter);
     }
 
+    @SuppressWarnings("deprecation")
     public Boolean isLaunchingService(Context mContext){
 
         ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
