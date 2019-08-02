@@ -16,12 +16,13 @@ public class AlarmTimePicker extends DialogFragment implements TimePickerDialog.
 
     @NonNull
     @Override
+    @SuppressWarnings("deprecation")
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //TODO make TimePicker
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int miniute = c.get(Calendar.MINUTE);
-        return new TimePickerDialog(getActivity(), this, hour, miniute, DateFormat.is24HourFormat(getActivity()));
+        return new TimePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar , this, hour, miniute, DateFormat.is24HourFormat(getActivity()));
     }
 
     @Override

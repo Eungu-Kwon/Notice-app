@@ -20,6 +20,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    ArrayList<AlarmListItem> list = null;
+    AlarmListAdapter listAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,19 +54,33 @@ public class MainActivity extends AppCompatActivity {
                     stopService(main_service);
             }
         });
+        setList();
 
-        ArrayList<AlarmListItem> list = new ArrayList<>();
+        list = new ArrayList<>();
+        AlarmListItem item = new AlarmListItem();
+        item.setTitle( "번째");
+        list.add(item);
+        RecyclerView recyclerView = findViewById(R.id.alarmlist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        listAdapter = new AlarmListAdapter(list);
+        recyclerView.setAdapter(listAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setList();
+    }
+
+    void setList(){
         for(int i = 1; i <= 17; i++){
             AlarmListItem item = new AlarmListItem();
             item.setTitle(i + "번째");
             list.add(item);
         }
 
-        RecyclerView recyclerView = findViewById(R.id.alarmlist);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        AlarmListAdapter listAdapter = new AlarmListAdapter(list);
-        recyclerView.setAdapter(listAdapter);
+        listAdapter.notifyDataSetChanged();
     }
 
     @SuppressWarnings("deprecation")
