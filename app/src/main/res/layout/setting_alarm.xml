@@ -1,35 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <CalendarView
-        android:id="@+id/calendarView"
+    <EditText
+        android:id="@+id/title_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:layout_marginTop="40dp"
+        android:hint="제목" />
+
+    <EditText
+        android:id="@+id/content_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:layout_below="@+id/title_text"
+        android:hint="내용" />
+
+    <Button
+        android:id="@+id/set_condition_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/content_text"
+        android:layout_marginTop="40dp"
+        android:text="조건 설정" />
 
     <EditText
         android:id="@+id/date_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:focusable="false"
         android:inputType="none"
-        android:focusable="false"/>
+        android:hint="날짜"
+        android:layout_below="@+id/set_condition_btn"/>
 
     <EditText
         android:id="@+id/time_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:focusable="false"
         android:inputType="none"
-        android:focusable="false"/>
+        android:hint="시간"
+        android:layout_below="@+id/date_input"/>
 
     <Button
         android:id="@+id/done_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Set" />
+        android:text="Set"
+        android:layout_alignParentBottom="true"/>
 
-</LinearLayout>
+</RelativeLayout>

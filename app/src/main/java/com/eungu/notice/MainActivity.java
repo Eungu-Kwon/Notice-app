@@ -54,12 +54,13 @@ public class MainActivity extends AppCompatActivity {
                     stopService(main_service);
             }
         });
-        setList();
 
         list = new ArrayList<>();
-        AlarmListItem item = new AlarmListItem();
-        item.setTitle( "번째");
-        list.add(item);
+        for(int i = 1; i <= 20; i++){
+            AlarmListItem item = new AlarmListItem();
+            item.setTitle(i + "번째");
+            list.add(item);
+        }
         RecyclerView recyclerView = findViewById(R.id.alarmlist);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -74,11 +75,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setList(){
-        for(int i = 1; i <= 17; i++){
-            AlarmListItem item = new AlarmListItem();
-            item.setTitle(i + "번째");
-            list.add(item);
-        }
+
 
         listAdapter.notifyDataSetChanged();
     }
