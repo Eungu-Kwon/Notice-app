@@ -13,6 +13,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.eungu.notice.DBManager.AlarmDBHelper;
+import com.eungu.notice.DBManager.DBData;
 import com.eungu.notice.list_maker.AlarmListAdapter;
 import com.eungu.notice.list_maker.AlarmListItem;
 
@@ -36,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO make setting
                 Intent intent = new Intent(getApplicationContext(), AlarmSettingActivity.class);
+                intent.putExtra("isNew", true);
                 startActivity(intent);
-                Toast.makeText(getApplicationContext(), "setting button clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -56,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         list = new ArrayList<>();
-        for(int i = 1; i <= 20; i++){
+        AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
+        for(int i = 0; i < dbHelper.getContactsCount(); i++){
             AlarmListItem item = new AlarmListItem();
-            item.setTitle(i + "번째");
+            DBData dbData = dbHelper.getData(i);
+            item.setTitle(dbData.getTitle());
             list.add(item);
         }
         RecyclerView recyclerView = findViewById(R.id.alarmlist);
@@ -75,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setList(){
-
-
         listAdapter.notifyDataSetChanged();
     }
 

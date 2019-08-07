@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.eungu.notice.AlarmSettingActivity;
+import com.eungu.notice.DBManager.DBData;
 import com.eungu.notice.R;
 
 import java.util.Calendar;
@@ -34,6 +35,7 @@ public class FragmentOnce extends Fragment {
         View view = inflater.inflate(R.layout.f_alarm_once, container, false);
         makePickerDialog(view);
         time = Calendar.getInstance();
+        time.set(Calendar.SECOND, 0);
         return view;
     }
 
@@ -79,7 +81,7 @@ public class FragmentOnce extends Fragment {
                         timeIp.setText(hourOfDay + "시 " + minute + "분");
                         time.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         time.set(Calendar.MINUTE, minute);
-                        Toast.makeText(getContext(), "T" + dateIp.getText(), Toast.LENGTH_SHORT).show();
+                        onDataSetListener.setData(time, -1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);
                     }
                 }, t_hour, t_minute, DateFormat.is24HourFormat(getActivity()));
                 tp.setTitle("시간 선택");
@@ -100,6 +102,7 @@ public class FragmentOnce extends Fragment {
                         time.set(Calendar.YEAR, year);
                         time.set(Calendar.MONTH, month);
                         time.set(Calendar.DATE, dayOfMonth);
+                        onDataSetListener.setData(time, -1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);
                     }
                 }, t_year, t_month, t_day);
                 dp.setTitle("날짜 선택");

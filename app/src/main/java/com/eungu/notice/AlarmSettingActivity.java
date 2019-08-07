@@ -3,6 +3,7 @@ package com.eungu.notice;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.eungu.notice.DBManager.AlarmDBHelper;
+import com.eungu.notice.DBManager.DBData;
 import com.eungu.notice.datapicker.AlarmTimePicker;
 import com.eungu.notice.fragments.DateSetListener;
 import com.eungu.notice.fragments.FragmentOnce;
@@ -27,13 +30,22 @@ import java.util.Calendar;
 public class AlarmSettingActivity extends AppCompatActivity implements DateSetListener {
 
     Calendar time;
-    int dayOfWeek, numData;
+    String title, content;
+    int dayOfWeek, ring_cat, content_cat;
+    boolean isNew;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_alarm);
+        Intent intent = getIntent();
+        isNew = intent.getExtras().getBoolean("isNew", true);
 
+        setConditionButton();
+        setDoneButton();
+    }
+
+    void setConditionButton(){
         Button set_condition_btn = findViewById(R.id.set_condition_btn);
         set_condition_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,10 +76,24 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
         });
     }
 
+    void setDoneButton(){
+        Button done_btn = findViewById(R.id.done_btn);
+        done_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
+                DBData dbData = new DBData(time, ring_cat, content_cat, title, content, true);
+                dbHelper.addData(dbData);
+                finish();
+            }
+        });
+    }
+
     @Override
-    public void setData(Calendar time, int dayOfWeek, int numData) {
+    public void setData(Calendar time, int dayOfWeek, int cat_ring, int cat_content){
         this.time = time;
         this.dayOfWeek = dayOfWeek;
-        this.numData = numData;
+        this.ring_cat = cat_ring;
+        this.content_cat = cat_content;
     }
 }
