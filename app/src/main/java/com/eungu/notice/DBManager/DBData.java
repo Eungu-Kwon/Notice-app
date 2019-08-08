@@ -1,12 +1,13 @@
 package com.eungu.notice.DBManager;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 
-public class DBData {
+public class DBData implements Serializable {
     public static final int RING_ONCE = 97;
     public static final int RING_DAYOFWEEK = 98;
     public static final int RING_MONTH = 99;
@@ -17,23 +18,25 @@ public class DBData {
     private final static String DATE_PAT = "yyyy-MM-dd HH:mm:ss";
 
     Calendar time;
-    int ringCategory;
+    int ringCategory, ringData;
     int contentCategory;
     String title, content;
     boolean  nowEnable;
-    public DBData(Calendar _time, int _ringCategory, int _contentCategory, String title, String _content, boolean _nowEnable) {
+    public DBData(Calendar _time, int _ringCategory, int _contentCategory, int ringData, String title, String _content, boolean _nowEnable) {
         this.time = _time;
         this.ringCategory = _ringCategory;
         this.contentCategory = _contentCategory;
+        this.ringData = ringData;
         this.title = title;
         this.content = _content;
         this.nowEnable = _nowEnable;
     }
 
-    public void updateData(Calendar _time, int _ringCategory, int _contentCategory, String title, String _content, boolean _nowEnable) {
+    public void updateData(Calendar _time, int _ringCategory, int _contentCategory, int ringData, String title, String _content, boolean _nowEnable) {
         this.time = _time;
         this.ringCategory = _ringCategory;
         this.contentCategory = _contentCategory;
+        this.ringData = ringData;
         this.title = title;
         this.content = _content;
         this.nowEnable = _nowEnable;
@@ -55,6 +58,14 @@ public class DBData {
         }
         this.time.setTime(dateTime);
         return 0;
+    }
+
+    public int getRingData() {
+        return ringData;
+    }
+
+    public void setRingData(int ringData) {
+        this.ringData = ringData;
     }
 
     public Calendar getTime() {

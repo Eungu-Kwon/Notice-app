@@ -16,9 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.eungu.notice.AlarmSettingActivity;
 import com.eungu.notice.DBManager.DBData;
 import com.eungu.notice.R;
 
@@ -33,9 +31,9 @@ public class FragmentOnce extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.f_alarm_once, container, false);
-        makePickerDialog(view);
         time = Calendar.getInstance();
         time.set(Calendar.SECOND, 0);
+        makePickerDialog(view);
         return view;
     }
 

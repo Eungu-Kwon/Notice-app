@@ -15,6 +15,7 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
     private static final String CATEGORY = "CATEGORY";
     private static final String WHENTORING = "WHENTORING";
     private static final String TITLE = "TITLE";
+    private static final String RING_DATA = "RINGDATA";
     private static final String CONTENT = "CONTENT";
     private static final String ENABLE = "ENABLE";
 
@@ -25,7 +26,7 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE ALARM_TABLE(_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + CONTENT_CATEGORY + " INTEGER" + ", " + CATEGORY +  " INTEGER, " +
-                WHENTORING + " TEXT, " + TITLE + " TEXT, " + CONTENT + " TEXT, " + ENABLE + " INTEGER)");
+                WHENTORING + " TEXT, " + RING_DATA + " INTEGER, " + TITLE + " TEXT, " + CONTENT + " TEXT, " + ENABLE + " INTEGER)");
 
     }
 
@@ -41,6 +42,7 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
         values.put(CONTENT_CATEGORY, item.getContentCategory());
         values.put(CATEGORY, item.getRingCategory());
         values.put(WHENTORING, item.getTimeToText());
+        values.put(RING_DATA, item.getRingData());
         values.put(TITLE, item.getTitle());
         values.put(CONTENT, item.getContent());
         values.put(ENABLE, item.isNowEnable());
@@ -53,14 +55,13 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + ALARM_TABLE, null);
         cursor.moveToFirst();
+        cursor.move(id);
         int cate = Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY)));
-        DBData dbData = new DBData(Calendar.getInstance(), cate, Integer.parseInt(cursor.getString(cursor.getColumnIndex(CONTENT_CATEGORY))),
+        DBData dbData = new DBData(Calendar.getInstance(), cate, Integer.parseInt(cursor.getString(cursor.getColumnIndex(CONTENT_CATEGORY))), cursor.getInt(cursor.getColumnIndex(RING_DATA)),
                 cursor.getString(cursor.getColumnIndex(TITLE)), cursor.getString(cursor.getColumnIndex(CONTENT)), true);
         dbData.setTimeFromText(cursor.getString(3));
-        if(cursor.getInt(6) == 1) {
-            dbData.setNowEnable(true);
-        }
-        else dbData.setNowEnable(false);
+        if(cursor.getInt(cursor.getColumnIndex(ENABLE)) == 0)
+            dbData.setNowEnable(false);
 
         return dbData;
     }
@@ -71,24 +72,25 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
         values.put(CONTENT_CATEGORY, item.getContentCategory());
         values.put(CATEGORY, item.getRingCategory());
         values.put(WHENTORING, item.getTimeToText());
+        values.put(RING_DATA, item.getRingData());
         values.put(TITLE, item.getTitle());
         values.put(CONTENT, item.getContent());
         values.put(ENABLE, item.isNowEnable());
 
-        int ret = db.update(ALARM_TABLE, values, "_ID="+id, null);
+        int ret = db.update(ALARM_TABLE, values, "_ID="+(id+1), null);
         db.close();
         return ret;
     }
 
     public boolean deleteColumn(long id){
         SQLiteDatabase db = this.getWritableDatabase();
-        int ret = db.delete(ALARM_TABLE, "_id="+id, null);
+        int ret = db.delete(ALARM_TABLE, "_id="+(id+1), null);
 
         db.close();
         return ret > 0;
     }
 
-    public int getContactsCount() {
+    public int getItemsCount() {
         String countQuery = "SELECT  * FROM " + ALARM_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);

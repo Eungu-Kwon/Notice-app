@@ -7,11 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
@@ -25,18 +25,19 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<AlarmListItem> list = null;
     AlarmListAdapter listAdapter = null;
 
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button setting_btn = findViewById(R.id.setting_btn);
+        ImageButton add_btn = findViewById(R.id.add_btn);
         Switch main_switch = (Switch)findViewById(R.id.main_switch);
 
-        setting_btn.setOnClickListener(new View.OnClickListener() {
+        add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO make setting
                 Intent intent = new Intent(getApplicationContext(), AlarmSettingActivity.class);
                 intent.putExtra("isNew", true);
                 startActivity(intent);
@@ -49,27 +50,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Intent main_service = new Intent(getApplicationContext(), NotiService.class);
-                if(isChecked)
+                if(isChecked) {
                     startService(main_service);
-                else
+                    listAdapter.setEnable(true);
+                    listAdapter.notifyDataSetChanged();
+                }
+                else {
                     //TODO make dialog
                     stopService(main_service);
+                    listAdapter.setEnable(false);
+//                    AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
+//                    for(int i = 0; i < dbHelper.getItemsCount(); i++){
+//                        AlarmListItem item = list.get(i);
+//
+//                        //item.setToggleSw(false);
+                        listAdapter.notifyDataSetChanged();
+//                    }
+                }
             }
         });
 
-        list = new ArrayList<>();
-        AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
-        for(int i = 0; i < dbHelper.getContactsCount(); i++){
-            AlarmListItem item = new AlarmListItem();
-            DBData dbData = dbHelper.getData(i);
-            item.setTitle(dbData.getTitle());
-            list.add(item);
-        }
-        RecyclerView recyclerView = findViewById(R.id.alarmlist);
+        recyclerView = findViewById(R.id.alarmlist);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        listAdapter = new AlarmListAdapter(list);
-        recyclerView.setAdapter(listAdapter);
     }
 
     @Override
@@ -79,6 +81,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setList(){
+        list = new ArrayList<>();
+        AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
+        for(int i = 0; i < dbHelper.getItemsCount(); i++){
+            AlarmListItem item = new AlarmListItem();
+            DBData dbData = dbHelper.getData(i);
+            item.setTitle(dbData.getTitle());
+            item.setToggleSw(dbData.isNowEnable()==1);
+            Log.i("No."+i, dbData.getContent()+".");
+            list.add(item);
+        }
+
+        listAdapter = new AlarmListAdapter(getApplicationContext(), list);
+        recyclerView.setAdapter(listAdapter);
+
         listAdapter.notifyDataSetChanged();
     }
 

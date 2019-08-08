@@ -1,14 +1,21 @@
 package com.eungu.notice;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.eungu.notice.DBManager.AlarmDBHelper;
+import com.eungu.notice.DBManager.DBData;
 
 public class NotiService extends Service {
     @Override
@@ -35,7 +42,31 @@ public class NotiService extends Service {
         }
 
         startForeground(1, builder.build());
+
+        setAlarm();
+
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    void setAlarm(){
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
+
+        for(int i = 0; i < dbHelper.getItemsCount(); i++){
+            DBData data = dbHelper.getData(i);
+
+            Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+            //mAlarmIntent.putExtra("mydata", data);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            if(Build.VERSION.SDK_INT >= 23)
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+            else if(Build.VERSION.SDK_INT >= 19)
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+            else
+                alarmManager.set(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+        }
     }
 
     @Override

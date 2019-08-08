@@ -32,21 +32,32 @@
                 android:orientation="horizontal"
                 android:layoutDirection="rtl">
 
-                <Button
-                    android:id="@+id/l_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginEnd="10dp"
-                    android:text="제거"/>
-
-                <Button
-                    android:id="@+id/setting_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/add_btn"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="5dp"
-                    android:text="설정" />
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/add" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/setting_btn"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/setting" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/l_delete"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/delete"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"/>
 
                 <Switch
                     android:id="@+id/main_switch"
@@ -54,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:checked="true"
+                    android:layout_marginBottom="10dp"
                     android:text="알람" />
 
             </LinearLayout>
