@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     AlarmListAdapter listAdapter = null;
 
     RecyclerView recyclerView;
+    Switch main_switch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageButton add_btn = findViewById(R.id.add_btn);
-        Switch main_switch = (Switch)findViewById(R.id.main_switch);
+        main_sw_init();
+
+        init_list();
 
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,8 +47,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        main_switch.setChecked(isLaunchingService(getApplicationContext()));
+        recyclerView = findViewById(R.id.alarmlist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setList();
+        set_main_sw_Listener();
+    }
+
+    void main_sw_init(){
+        main_switch = (Switch)findViewById(R.id.main_switch);
+
+        if(isLaunchingService(getApplicationContext())){
+            main_switch.setChecked(true);
+        }
+        else {
+            main_switch.setChecked(false);
+        }
+    }
+
+    void set_main_sw_Listener(){
         main_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -59,29 +83,20 @@ public class MainActivity extends AppCompatActivity {
                     //TODO make dialog
                     stopService(main_service);
                     listAdapter.setEnable(false);
-//                    AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
-//                    for(int i = 0; i < dbHelper.getItemsCount(); i++){
-//                        AlarmListItem item = list.get(i);
-//
-//                        //item.setToggleSw(false);
-                        listAdapter.notifyDataSetChanged();
-//                    }
+                    listAdapter.notifyDataSetChanged();
                 }
             }
         });
-
-        recyclerView = findViewById(R.id.alarmlist);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setList();
+    void init_list(){
+        list = new ArrayList<>();
+        listAdapter = new AlarmListAdapter(getApplicationContext(), list);
+        recyclerView.setAdapter(listAdapter);
     }
 
     void setList(){
-        list = new ArrayList<>();
+        list.clear();
         AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
         for(int i = 0; i < dbHelper.getItemsCount(); i++){
             AlarmListItem item = new AlarmListItem();
@@ -92,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
             list.add(item);
         }
 
-        listAdapter = new AlarmListAdapter(getApplicationContext(), list);
-        recyclerView.setAdapter(listAdapter);
+
 
         listAdapter.notifyDataSetChanged();
     }
