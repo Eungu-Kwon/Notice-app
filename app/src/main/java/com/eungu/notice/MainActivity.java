@@ -46,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        recyclerView = findViewById(R.id.alarmlist);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -92,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
     void init_list(){
         list = new ArrayList<>();
         listAdapter = new AlarmListAdapter(getApplicationContext(), list);
+
+        recyclerView = findViewById(R.id.alarmlist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(listAdapter);
     }
 
@@ -106,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
             Log.i("No."+i, dbData.getContent()+".");
             list.add(item);
         }
-
-
 
         listAdapter.notifyDataSetChanged();
     }
