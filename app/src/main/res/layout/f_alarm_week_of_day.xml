@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.eungu.notice.AlarmSettingActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <ToggleButton
-            android:id="@+id/toggleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ToggleButton" />
-
-        <Button
+        <com.eungu.notice.DaySquareButton
             android:id="@+id/day_mon_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,46 +18,52 @@
             android:background="@android:color/transparent"
             android:text="월" />
 
-        <Button
+        <com.eungu.notice.DaySquareButton
             android:id="@+id/day_tue_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="화" />
 
-        <Button
+        <com.eungu.notice.DaySquareButton
             android:id="@+id/day_wed_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="수" />
 
-        <Button
+        <com.eungu.notice.DaySquareButton
             android:id="@+id/day_thu_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="목" />
 
-        <Button
+        <com.eungu.notice.DaySquareButton
             android:id="@+id/day_fri_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="금" />
 
-        <Button
+        <com.eungu.notice.DaySquareButton
             android:id="@+id/day_sat_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="토" />
 
-        <Button
+        <com.eungu.notice.DaySquareButton
             android:id="@+id/day_sun_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="일" />
     </LinearLayout>
 

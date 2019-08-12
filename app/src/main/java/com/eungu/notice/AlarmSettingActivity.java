@@ -69,18 +69,18 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
                                     case 0:
                                         FragmentOnce fragOnce = new FragmentOnce();
                                         fragmentTransaction.replace(R.id.condition_fragment, fragOnce).commit();
-                                        set_condition_btn.setText("시간 선택");
+                                        set_condition_btn.setText("시간을 선택해주세요");
                                         break;
                                     case 1:
                                         FragmentWeekOfDay fragWeek = new FragmentWeekOfDay();
                                         fragmentTransaction.replace(R.id.condition_fragment, fragWeek).commit();
-                                        set_condition_btn.setText("요일별");
+                                        set_condition_btn.setText("요일을 선택해주세요");
                                         day = 0;
                                         break;
                                     case 2:
                                         FragmentMonth fragmonth = new FragmentMonth();
                                         fragmentTransaction.replace(R.id.condition_fragment, fragmonth).commit();
-                                        set_condition_btn.setText("월별");
+                                        set_condition_btn.setText("날짜를 선택해주세요");
                                         break;
                                 }
                                 time = null;
@@ -123,10 +123,16 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
     }
 
     @Override
-    public void setData(Calendar time, int day, int cat_ring, int cat_content){
+    public void setData(Calendar time, int dayOfWeek, int cat_ring, int cat_content){
         this.time = time;
-        this.day = day;
+        this.day = dayOfWeek;
         this.ring_cat = cat_ring;
         this.content_cat = cat_content;
+    }
+
+    @Override
+    public void setBtnText(String str) {
+        Button b = (Button)findViewById(R.id.set_condition_btn);
+        b.setText(str);
     }
 }
