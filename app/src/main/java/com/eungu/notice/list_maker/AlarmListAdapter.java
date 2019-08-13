@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -26,18 +28,22 @@ import java.util.ArrayList;
 public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.ViewHolder> {
     //TODO Make OnClickListener
     private ArrayList<AlarmListItem> aData = null;
+    public boolean[] delete_list = null;
     Context context;
-    boolean enable = true;
+    boolean enable = true, isDeleting = false;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView textView1 ;
+        TextView text_title, text_time;
         Switch sw;
+        CheckBox delete_check;
         ViewHolder(View itemView) {
             super(itemView) ;
 
             // 뷰 객체에 대한 참조. (hold strong reference)
-            textView1 = itemView.findViewById(R.id.alarmcontent) ;
+            text_title = itemView.findViewById(R.id.alarmcontent);
+            text_time = itemView.findViewById(R.id.cell_time);
             sw = itemView.findViewById(R.id.is_item_enable);
+            delete_check = itemView.findViewById(R.id.delete_checkBox);
         }
     }
 
@@ -49,23 +55,32 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
     @Override
     public AlarmListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
+        delete_list = new boolean[aData.size()];
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.alarm_list_item, viewGroup, false);
         AlarmListAdapter.ViewHolder vh = new AlarmListAdapter.ViewHolder(view);
         return vh;
     }
 
+    public void setDeleteMode(boolean state){
+        isDeleting = state;
+    }
+
+
+
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final int idx = i;
+        final AlarmDBHelper dbHelper = new AlarmDBHelper(context, "ALARM_TABLE", null, 1);
+        final DBData data = dbHelper.getData(idx);
+        if(data == null) return;
         String title = aData.get(i).getTitle();
         Boolean isChecked = aData.get(i).getToggleSw();
-        viewHolder.textView1.setText(title);
+        viewHolder.text_title.setText(title);
+        viewHolder.text_time.setText(data.getTimeToText());
         viewHolder.sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AlarmDBHelper dbHelper = new AlarmDBHelper(context, "ALARM_TABLE", null, 1);
-                DBData data = dbHelper.getData(idx);
                 if(isChecked == (data.isNowEnable()==1)) return;
                 aData.get(idx).setToggleSw(isChecked);
                 data.setNowEnable(isChecked);
@@ -92,6 +107,22 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
         });
         viewHolder.sw.setChecked(isChecked);
         viewHolder.sw.setEnabled(enable);
+
+        if(isDeleting){
+            viewHolder.delete_check.setVisibility(View.VISIBLE);
+            viewHolder.sw.setVisibility(View.GONE);
+            viewHolder.delete_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    delete_list[idx] = isChecked;
+                }
+            });
+        }
+        else{
+            delete_list = new boolean[aData.size()];
+            viewHolder.delete_check.setVisibility(View.GONE);
+            viewHolder.sw.setVisibility(View.VISIBLE);
+        }
     }
 
     public boolean isEnable() {

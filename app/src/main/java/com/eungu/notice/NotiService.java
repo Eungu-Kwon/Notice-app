@@ -39,7 +39,7 @@ public class NotiService extends Service {
             notificationManager.createNotificationChannel(nCh);
         }
 
-        startForeground(1, builder.build());
+        startForeground(678, builder.build());
 
         setAlarm();
 

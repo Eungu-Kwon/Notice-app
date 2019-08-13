@@ -55,7 +55,7 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + ALARM_TABLE, null);
         cursor.moveToFirst();
-        cursor.move(id);
+        if(!cursor.move(id)) return null;
         int cate = Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY)));
         DBData dbData = new DBData(Calendar.getInstance(), cate, Integer.parseInt(cursor.getString(cursor.getColumnIndex(CONTENT_CATEGORY))), cursor.getInt(cursor.getColumnIndex(RING_DATA)),
                 cursor.getString(cursor.getColumnIndex(TITLE)), cursor.getString(cursor.getColumnIndex(CONTENT)), true);
@@ -80,6 +80,18 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
         int ret = db.update(ALARM_TABLE, values, "_ID="+(id+1), null);
         db.close();
         return ret;
+    }
+    //TODO FixIt
+    public void computeID(){
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ALARM_TABLE, null);
+        cursor.moveToFirst();
+        int idx = 1;
+        do{
+            db.rawQuery("UPDATE ALARM_TABLE SET _ID = " + idx + " WHERE _ID = " + cursor.getInt(cursor.getColumnIndex("_ID")) + ";", null);
+            idx+=1;
+        }while (cursor.moveToNext());
+        db.close();
     }
 
     public boolean deleteColumn(long id){
