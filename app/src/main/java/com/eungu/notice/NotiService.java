@@ -8,11 +8,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
@@ -25,7 +23,7 @@ public class NotiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "default");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "main");
 
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("서비스 실행중")
@@ -36,7 +34,7 @@ public class NotiService extends Service {
         // 알림 표시
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel nCh = new NotificationChannel("default", "기본 채널", NotificationManager.IMPORTANCE_LOW);
+            NotificationChannel nCh = new NotificationChannel("main", "메인 채널", NotificationManager.IMPORTANCE_LOW);
             nCh.setShowBadge(false);
             notificationManager.createNotificationChannel(nCh);
         }
@@ -55,17 +53,27 @@ public class NotiService extends Service {
         for(int i = 0; i < dbHelper.getItemsCount(); i++){
             DBData data = dbHelper.getData(i);
 
-            Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            //mAlarmIntent.putExtra("mydata", data);
+            if(data.isNowEnable() == 1) {
+                Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                mAlarmIntent.putExtra("mydata", i);
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            if(Build.VERSION.SDK_INT >= 23)
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
-            else if(Build.VERSION.SDK_INT >= 19)
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
-            else
-                alarmManager.set(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+                if (Build.VERSION.SDK_INT >= 23)
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+                else if (Build.VERSION.SDK_INT >= 19)
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+                else
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+            }
+//            else{
+//                Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+//                mAlarmIntent.putExtra("mydata", i);
+//
+//                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                alarmManager.cancel(pendingIntent);
+//                pendingIntent.cancel();
+//            }
         }
     }
 

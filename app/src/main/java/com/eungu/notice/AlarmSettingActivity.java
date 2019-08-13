@@ -1,8 +1,11 @@
 package com.eungu.notice;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -15,13 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.eungu.notice.DBManager.AlarmDBHelper;
-import com.eungu.notice.DBManager.DBData;
-import com.eungu.notice.fragments.DateSetListener;
-import com.eungu.notice.fragments.FragmentEmpty;
-import com.eungu.notice.fragments.FragmentMonth;
-import com.eungu.notice.fragments.FragmentOnce;
-import com.eungu.notice.fragments.FragmentWeekOfDay;
+import com.eungu.notice.DBManager.*;
+import com.eungu.notice.fragments.*;
 
 import java.util.Calendar;
 
@@ -114,9 +112,26 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
                     Toast.makeText(getApplicationContext(), "내용을 입력해주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
                 AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
                 DBData dbData = new DBData(time, ring_cat, content_cat, day, title, content,true);
                 dbHelper.addData(dbData);
+
+                if(MainActivity.isLaunchingService(getApplicationContext())){
+                    Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                    mAlarmIntent.putExtra("mydata", dbHelper.getItemsCount() - 1);
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), dbHelper.getItemsCount(), mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    if(Build.VERSION.SDK_INT >= 23)
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
+                    else if(Build.VERSION.SDK_INT >= 19)
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
+                    else
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
+                }
                 finish();
             }
         });

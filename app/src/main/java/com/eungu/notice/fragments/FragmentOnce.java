@@ -58,8 +58,21 @@ public class FragmentOnce extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
+                    Calendar tempC = Calendar.getInstance();
+                    tempC.set(Calendar.SECOND, 0);
+                    int t_hour = tempC.get(Calendar.HOUR_OF_DAY);
+                    int t_minute = tempC.get(Calendar.MINUTE);
+
                     timeIp.setEnabled(false);
                     dateIp.setEnabled(false);
+                    dateIp.setText(tempC.get(Calendar.YEAR) + "년 " + (tempC.get(Calendar.MONTH)+1) + "월 "+ tempC.get(Calendar.DAY_OF_MONTH) + "일");
+                    if(t_hour < 12) timeIp.setText("오전 " + t_hour + "시 "+ t_minute + "분");
+                    else {
+                        if(t_hour == 12) timeIp.setText("오후 " + 12 + "시 "+ t_minute + "분");
+                        else timeIp.setText("오후 " + (t_hour - 12) + "시 "+ t_minute + "분");
+                    }
+
+                    time.setTime(tempC.getTime());
                 }
                 else{
                     timeIp.setEnabled(true);
@@ -70,13 +83,17 @@ public class FragmentOnce extends Fragment {
         timeIp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int t_hour = time.get(Calendar.HOUR_OF_DAY);
+                final int t_hour = time.get(Calendar.HOUR_OF_DAY);
                 final int t_minute = time.get(Calendar.MINUTE);
                 TimePickerDialog tp;
                 tp = new TimePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        timeIp.setText(hourOfDay + "시 " + minute + "분");
+                        if(hourOfDay < 12) timeIp.setText("오전 " + hourOfDay + "시 "+ minute + "분");
+                        else {
+                            if(hourOfDay == 12) timeIp.setText("오후 " + 12 + "시 "+ minute + "분");
+                            else timeIp.setText("오후 " + (hourOfDay - 12) + "시 "+ minute + "분");
+                        }
                         time.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         time.set(Calendar.MINUTE, minute);
                         onDataSetListener.setData(time, -1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);

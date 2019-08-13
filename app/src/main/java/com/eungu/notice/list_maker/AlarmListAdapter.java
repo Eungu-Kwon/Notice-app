@@ -1,6 +1,10 @@
 package com.eungu.notice.list_maker;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.eungu.notice.AlarmReceiver;
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
 import com.eungu.notice.MainActivity;
@@ -65,11 +70,28 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
                 aData.get(idx).setToggleSw(isChecked);
                 data.setNowEnable(isChecked);
                 dbHelper.updateData(data, idx);
+
+                AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                Intent mAlarmIntent = new Intent(context, AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, idx, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                if(isChecked){
+                    if(Build.VERSION.SDK_INT >= 23)
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+                    else if(Build.VERSION.SDK_INT >= 19)
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+                    else
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
+                }
+                else{
+                    if(pendingIntent != null){
+                        alarmManager.cancel(pendingIntent);
+                        pendingIntent.cancel();
+                    }
+                }
             }
         });
         viewHolder.sw.setChecked(isChecked);
         viewHolder.sw.setEnabled(enable);
-        Log.i("mTag1", "OBVH");
     }
 
     public boolean isEnable() {

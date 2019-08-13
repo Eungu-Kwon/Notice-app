@@ -6,8 +6,9 @@
     tools:context="com.eungu.notice.AlarmSettingActivity">
 
     <LinearLayout
+        android:id="@+id/linear_wd"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <com.eungu.notice.DaySquareButton
@@ -65,6 +66,23 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="일" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_wd"
+        android:layout_marginTop="50dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TimePicker
+            android:id="@+id/wd_timepicker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:timePickerMode="spinner">
+        </TimePicker>
     </LinearLayout>
 
 </RelativeLayout>

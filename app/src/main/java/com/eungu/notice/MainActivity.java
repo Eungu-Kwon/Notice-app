@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<AlarmListItem> list = null;
     AlarmListAdapter listAdapter = null;
-
+    boolean isServiceRunning = false;
     RecyclerView recyclerView;
     Switch main_switch;
 
@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageButton add_btn = findViewById(R.id.add_btn);
-        main_sw_init();
 
         init_list();
 
@@ -46,44 +45,41 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        main_sw_init();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setList();
-        set_main_sw_Listener();
     }
 
     void main_sw_init(){
         main_switch = (Switch)findViewById(R.id.main_switch);
-
-        if(isLaunchingService(getApplicationContext())){
-            main_switch.setChecked(true);
-        }
-        else {
-            main_switch.setChecked(false);
-        }
-    }
-
-    void set_main_sw_Listener(){
+        isServiceRunning = isLaunchingService(getApplicationContext());
+        main_switch.setChecked(isServiceRunning);
+        listAdapter.setEnable(isServiceRunning);
         main_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Intent main_service = new Intent(getApplicationContext(), NotiService.class);
                 if(isChecked) {
                     startService(main_service);
-                    listAdapter.setEnable(true);
-                    listAdapter.notifyDataSetChanged();
                 }
                 else {
                     //TODO make dialog
                     stopService(main_service);
-                    listAdapter.setEnable(false);
-                    listAdapter.notifyDataSetChanged();
                 }
+                listAdapter.setEnable(isChecked);
+                listAdapter.notifyDataSetChanged();
+                isServiceRunning = isChecked;
             }
         });
+        if(isServiceRunning) {
+            Intent main_service = new Intent(getApplicationContext(), NotiService.class);
+            stopService(main_service);
+            startService(main_service);
+        }
     }
 
     void init_list(){
@@ -97,21 +93,21 @@ public class MainActivity extends AppCompatActivity {
 
     void setList(){
         list.clear();
+
         AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
         for(int i = 0; i < dbHelper.getItemsCount(); i++){
             AlarmListItem item = new AlarmListItem();
             DBData dbData = dbHelper.getData(i);
             item.setTitle(dbData.getTitle());
             item.setToggleSw(dbData.isNowEnable()==1);
-            Log.i("No."+i, dbData.getContent()+".");
+
             list.add(item);
         }
-
         listAdapter.notifyDataSetChanged();
     }
 
     @SuppressWarnings("deprecation")
-    public Boolean isLaunchingService(Context mContext){
+    public static Boolean isLaunchingService(Context mContext){
 
         ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
 
