@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -79,16 +80,21 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
 
         int ret = db.update(ALARM_TABLE, values, "_ID="+(id+1), null);
         db.close();
+        Log.i("mTag", "0?"+item.getTime().getTime().toString());
         return ret;
     }
-    //TODO FixIt
+
     public void computeID(){
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + ALARM_TABLE, null);
-        cursor.moveToFirst();
+
+        if(cursor.moveToFirst() == false) {
+            db.close();
+            return;
+        }
         int idx = 1;
         do{
-            db.rawQuery("UPDATE ALARM_TABLE SET _ID = " + idx + " WHERE _ID = " + cursor.getInt(cursor.getColumnIndex("_ID")) + ";", null);
+            db.execSQL("UPDATE ALARM_TABLE SET _ID = " + idx + " WHERE _ID = " + cursor.getInt(cursor.getColumnIndex("_ID")) + ";");
             idx+=1;
         }while (cursor.moveToNext());
         db.close();

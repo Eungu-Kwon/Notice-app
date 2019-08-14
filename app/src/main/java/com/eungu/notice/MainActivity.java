@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = list.size()-1; i >= 0; i--){
                     if(delete_list[i]){
                         dbHelper.deleteColumn(i);
+                        list.remove(i);
                     }
                 }
                 dbHelper.computeID();

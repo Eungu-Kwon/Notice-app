@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -98,6 +99,9 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
             public void onClick(View v) {
                 EditText title_edit = findViewById(R.id.title_text);
                 EditText content_edit = findViewById(R.id.content_text);
+                Calendar now = Calendar.getInstance();
+                now.set(Calendar.SECOND, 0);
+                now.set(Calendar.MILLISECOND, 0);
                 title = title_edit.getText().toString();
                 content = content_edit.getText().toString();
                 if(day == 0){
@@ -106,6 +110,10 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
                 }
                 if(time == null){
                     Toast.makeText(getApplicationContext(), "시간을 선택해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if((ring_cat == DBData.RING_ONCE && time.compareTo(now) == -1) ){
+                    Toast.makeText(getApplicationContext(), "현재시간 이후로 설정해주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(content.equals("")){
@@ -117,7 +125,16 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
 
                 AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
                 DBData dbData = new DBData(time, ring_cat, content_cat, day, title, content,true);
+
+                if((dbData.getRingCategory() == DBData.RING_DAYOFWEEK && (dbData.getRingData() & (1 << (now.get(Calendar.DAY_OF_WEEK) - 1))) == 0)
+                || (dbData.getRingCategory() == DBData.RING_MONTH && (dbData.getRingData() & (1 << (now.get(Calendar.DAY_OF_MONTH) - 1))) == 0)
+                || (dbData.getTime().compareTo(now) == -1)){
+                    ComputeClass compute = new ComputeClass();
+                    dbData.setTimeFromText(compute.compute_date(dbData));
+                }
+
                 dbHelper.addData(dbData);
+                dbHelper.computeID();
 
                 if(MainActivity.isLaunchingService(getApplicationContext())){
                     Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);

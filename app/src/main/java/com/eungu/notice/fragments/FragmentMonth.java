@@ -33,6 +33,7 @@ public class FragmentMonth extends Fragment {
 
         time = Calendar.getInstance();
         time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
         month_btn = new DaySquareButton[35];
         LinearLayout[] ll = new LinearLayout[5];
 

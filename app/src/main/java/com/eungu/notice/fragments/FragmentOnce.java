@@ -33,6 +33,7 @@ public class FragmentOnce extends Fragment {
         View view = inflater.inflate(R.layout.f_alarm_once, container, false);
         time = Calendar.getInstance();
         time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
         makePickerDialog(view);
         return view;
     }

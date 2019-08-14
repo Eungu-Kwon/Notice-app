@@ -33,6 +33,7 @@ public class FragmentWeekOfDay extends Fragment{
         View view = inflater.inflate(R.layout.f_alarm_week_of_day, container, false);
         time = Calendar.getInstance();
         time.set(Calendar.SECOND, 0);
+        time.set(Calendar.MILLISECOND, 0);
         setDays(view);
         setTime(view);
         return view;
@@ -44,15 +45,13 @@ public class FragmentWeekOfDay extends Fragment{
 
     public void attachButtons(View view){
         days_btn = new Button[7];
-        days_btn[0] = view.findViewById(R.id.day_mon_btn);
-        days_btn[1] = view.findViewById(R.id.day_tue_btn);
-        days_btn[2] = view.findViewById(R.id.day_wed_btn);
-        days_btn[3] = view.findViewById(R.id.day_thu_btn);
-        days_btn[4] = view.findViewById(R.id.day_fri_btn);
-        days_btn[5] = view.findViewById(R.id.day_sat_btn);
-        days_btn[6] = view.findViewById(R.id.day_sun_btn);
-
-
+        days_btn[0] = view.findViewById(R.id.day_sun_btn);
+        days_btn[1] = view.findViewById(R.id.day_mon_btn);
+        days_btn[2] = view.findViewById(R.id.day_tue_btn);
+        days_btn[3] = view.findViewById(R.id.day_wed_btn);
+        days_btn[4] = view.findViewById(R.id.day_thu_btn);
+        days_btn[5] = view.findViewById(R.id.day_fri_btn);
+        days_btn[6] = view.findViewById(R.id.day_sat_btn);
 
         for(int i = 0; i < 7; i++){
             final int idx = i;
@@ -92,7 +91,7 @@ public class FragmentWeekOfDay extends Fragment{
         String ret = "매주 ";
         boolean isFirst = true;
         if((day & 1 << 0) > 0){
-            ret += "월";
+            ret += "일";
             isFirst = false;
         }
         if((day & 1 << 1) > 0){
@@ -100,42 +99,42 @@ public class FragmentWeekOfDay extends Fragment{
                 isFirst = false;
             }
             else ret += ", ";
-            ret += "화";
+            ret += "월";
         }
         if((day & 1 << 2) > 0){
             if(isFirst){
                 isFirst = false;
             }
             else ret += ", ";
-            ret += "수";
+            ret += "화";
         }
         if((day & 1 << 3) > 0){
             if(isFirst){
                 isFirst = false;
             }
             else ret += ", ";
-            ret += "목";
+            ret += "수";
         }
         if((day & 1 << 4) > 0){
             if(isFirst){
                 isFirst = false;
             }
             else ret += ", ";
-            ret += "금";
+            ret += "목";
         }
         if((day & 1 << 5) > 0){
             if(isFirst){
                 isFirst = false;
             }
             else ret += ", ";
-            ret += "토";
+            ret += "금";
         }
         if((day & 1 << 6) > 0){
             if(isFirst){
                 isFirst = false;
             }
             else ret += ", ";
-            ret += "일";
+            ret += "토";
         }
 
         return ret;

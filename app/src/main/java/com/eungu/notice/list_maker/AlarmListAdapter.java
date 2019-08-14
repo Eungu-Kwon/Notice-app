@@ -13,17 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.eungu.notice.AlarmReceiver;
+import com.eungu.notice.ComputeClass;
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
-import com.eungu.notice.MainActivity;
 import com.eungu.notice.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.ViewHolder> {
     //TODO Make OnClickListener
@@ -39,7 +39,6 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
         ViewHolder(View itemView) {
             super(itemView) ;
 
-            // 뷰 객체에 대한 참조. (hold strong reference)
             text_title = itemView.findViewById(R.id.alarmcontent);
             text_time = itemView.findViewById(R.id.cell_time);
             sw = itemView.findViewById(R.id.is_item_enable);
@@ -50,12 +49,14 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
     public  AlarmListAdapter(Context context, ArrayList<AlarmListItem> list){
         this.context = context;
         aData = list;
+        delete_list = new boolean[100];
+        Log.i("mTag", "new arr");
     }
     @NonNull
     @Override
     public AlarmListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
-        delete_list = new boolean[aData.size()];
+
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.alarm_list_item, viewGroup, false);
         AlarmListAdapter.ViewHolder vh = new AlarmListAdapter.ViewHolder(view);
@@ -65,8 +66,6 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
     public void setDeleteMode(boolean state){
         isDeleting = state;
     }
-
-
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
@@ -78,18 +77,22 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
         Boolean isChecked = aData.get(i).getToggleSw();
         viewHolder.text_title.setText(title);
         viewHolder.text_time.setText(data.getTimeToText());
+
         viewHolder.sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked == (data.isNowEnable()==1)) return;
                 aData.get(idx).setToggleSw(isChecked);
                 data.setNowEnable(isChecked);
-                dbHelper.updateData(data, idx);
 
                 AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
                 Intent mAlarmIntent = new Intent(context, AlarmReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, idx, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 if(isChecked){
+                    if(data.getTime().compareTo(Calendar.getInstance()) < 0) {
+                        ComputeClass compute = new ComputeClass();
+                        data.setTimeFromText(compute.compute_date(data));
+                    }
                     if(Build.VERSION.SDK_INT >= 23)
                         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
                     else if(Build.VERSION.SDK_INT >= 19)
@@ -103,6 +106,8 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
                         pendingIntent.cancel();
                     }
                 }
+
+                dbHelper.updateData(data, idx);
             }
         });
         viewHolder.sw.setChecked(isChecked);
@@ -111,17 +116,20 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
         if(isDeleting){
             viewHolder.delete_check.setVisibility(View.VISIBLE);
             viewHolder.sw.setVisibility(View.GONE);
-            viewHolder.delete_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            viewHolder.delete_check.setChecked(delete_list[i]);
+            viewHolder.delete_check.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    delete_list[idx] = isChecked;
+                public void onClick(View v) {
+                    if(delete_list[i] )
                 }
             });
         }
         else{
-            delete_list = new boolean[aData.size()];
+            delete_list = new boolean[100];
+            Log.i("mTag", "new arr");
             viewHolder.delete_check.setVisibility(View.GONE);
             viewHolder.sw.setVisibility(View.VISIBLE);
+            viewHolder.delete_check.setChecked(false);
         }
     }
 

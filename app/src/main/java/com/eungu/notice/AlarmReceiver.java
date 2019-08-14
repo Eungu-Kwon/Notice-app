@@ -2,18 +2,16 @@ package com.eungu.notice;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
+import com.eungu.notice.list_maker.AlarmListAdapter;
 
 import java.util.Calendar;
 
@@ -26,8 +24,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         if(data!= -1){
             DBData dbdata = dbHelper.getData(data);
             RingRing(context, dbdata.getTitle(), dbdata.getTimeToText(), data);
-            compute_date(context, dbdata, data);
-
+            dbdata.setNowEnable(false);
+            ComputeClass compute = new ComputeClass();
+            dbdata.setTimeFromText(compute.compute_date(dbdata));
+            dbHelper.updateData(dbdata, data);
         }
     }
 
@@ -35,7 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
 
         builder.setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
+                .setContentTitle(title + " id : " + id)
                 .setContentText(content)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setNumber(0);

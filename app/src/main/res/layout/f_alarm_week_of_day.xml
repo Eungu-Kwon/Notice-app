@@ -12,6 +12,14 @@
         android:orientation="horizontal">
 
         <com.eungu.notice.DaySquareButton
+            android:id="@+id/day_sun_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="일" />
+
+        <com.eungu.notice.DaySquareButton
             android:id="@+id/day_mon_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,14 +66,6 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="토" />
-
-        <com.eungu.notice.DaySquareButton
-            android:id="@+id/day_sun_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:text="일" />
 
     </LinearLayout>
 
