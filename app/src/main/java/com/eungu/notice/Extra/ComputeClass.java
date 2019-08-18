@@ -1,4 +1,7 @@
-package com.eungu.notice;
+package com.eungu.notice.Extra;
+
+import android.app.ActivityManager;
+import android.content.Context;
 
 import com.eungu.notice.DBManager.DBData;
 
@@ -7,12 +10,14 @@ import java.util.Calendar;
 public class ComputeClass {
     public final String compute_date(DBData data){          //call when today's time is after then data's time
         Calendar now = Calendar.getInstance();
+        now.set(Calendar.SECOND, 0);
+        now.set(Calendar.MILLISECOND, 0);
         Calendar temp = data.getTime();
         temp.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DATE));
         int day_data = data.getRingData();
         switch (data.getRingCategory()){
             case DBData.RING_ONCE:
-                if(temp.compareTo(now) < -1) temp.add(Calendar.DATE, 1);
+                if(temp.compareTo(now) == -1) temp.add(Calendar.DATE, 1);
                 data.setTime(temp);
                 break;
             case DBData.RING_DAYOFWEEK:
@@ -35,5 +40,18 @@ public class ComputeClass {
                 break;
         }
         return data.getTimeToText();
+    }
+
+    @SuppressWarnings("deprecation")
+    public final Boolean isLaunchingService(Context mContext, Class<?> c){
+
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (c.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+
+        return  false;
     }
 }

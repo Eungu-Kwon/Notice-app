@@ -10,12 +10,13 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
 
 public class NotiService extends Service {
+    AlarmManager alarmManager = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,7 +24,7 @@ public class NotiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "main");
+         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "main");
 
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("서비스 실행중")
@@ -47,7 +48,7 @@ public class NotiService extends Service {
     }
 
     void setAlarm(){
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
 
         for(int i = 0; i < dbHelper.getItemsCount(); i++){
@@ -56,7 +57,6 @@ public class NotiService extends Service {
             if(data.isNowEnable() == 1) {
                 Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
                 mAlarmIntent.putExtra("mydata", i);
-
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 if (Build.VERSION.SDK_INT >= 23)
@@ -77,6 +77,8 @@ public class NotiService extends Service {
         }
     }
 
+
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -85,5 +87,13 @@ public class NotiService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
+        for(int i = 0; i < dbHelper.getItemsCount(); i++) {
+            Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+        }
+
     }
 }

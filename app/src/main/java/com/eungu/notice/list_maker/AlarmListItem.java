@@ -10,6 +10,7 @@ public class AlarmListItem {
 
     public int category;
     public String Title;
+    public String time;
     public int content_category;
     public Calendar whenToRing;
 
@@ -21,6 +22,14 @@ public class AlarmListItem {
         Title = null;
         content_category = -1;
         whenToRing = null;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getContent() {

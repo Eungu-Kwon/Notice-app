@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -20,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.eungu.notice.DBManager.*;
+import com.eungu.notice.Extra.ComputeClass;
 import com.eungu.notice.fragments.*;
 
 import java.util.Calendar;
@@ -109,8 +109,15 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
                     return;
                 }
                 if(time == null){
-                    Toast.makeText(getApplicationContext(), "시간을 선택해주세요", Toast.LENGTH_SHORT).show();
-                    return;
+                    if(ring_cat != DBData.RING_ONCE || day != 1){
+                        Toast.makeText(getApplicationContext(), "시간을 선택해주세요", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else {
+                        time = Calendar.getInstance();
+                        time.set(Calendar.SECOND, 0);
+                        time.set(Calendar.MILLISECOND, 0);
+                    }
                 }
                 if((ring_cat == DBData.RING_ONCE && time.compareTo(now) == -1) ){
                     Toast.makeText(getApplicationContext(), "현재시간 이후로 설정해주세요", Toast.LENGTH_SHORT).show();
@@ -136,7 +143,7 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
                 dbHelper.addData(dbData);
                 dbHelper.computeID();
 
-                if(MainActivity.isLaunchingService(getApplicationContext())){
+                if(new ComputeClass().isLaunchingService(getApplicationContext(), NotiService.class)){
                     Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
                     mAlarmIntent.putExtra("mydata", dbHelper.getItemsCount() - 1);
 

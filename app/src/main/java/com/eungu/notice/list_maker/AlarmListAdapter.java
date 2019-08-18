@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.eungu.notice.AlarmReceiver;
-import com.eungu.notice.ComputeClass;
+import com.eungu.notice.Extra.ComputeClass;
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
 import com.eungu.notice.R;
@@ -50,7 +49,6 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
         this.context = context;
         aData = list;
         delete_list = new boolean[100];
-        Log.i("mTag", "new arr");
     }
     @NonNull
     @Override
@@ -75,8 +73,9 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
         if(data == null) return;
         String title = aData.get(i).getTitle();
         Boolean isChecked = aData.get(i).getToggleSw();
+        String time = aData.get(i).getTime();
         viewHolder.text_title.setText(title);
-        viewHolder.text_time.setText(data.getTimeToText());
+        viewHolder.text_time.setText(time);
 
         viewHolder.sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -120,13 +119,12 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
             viewHolder.delete_check.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(delete_list[i] )
+                    delete_list[idx] = (!delete_list[idx]);
                 }
             });
         }
         else{
             delete_list = new boolean[100];
-            Log.i("mTag", "new arr");
             viewHolder.delete_check.setVisibility(View.GONE);
             viewHolder.sw.setVisibility(View.VISIBLE);
             viewHolder.delete_check.setChecked(false);

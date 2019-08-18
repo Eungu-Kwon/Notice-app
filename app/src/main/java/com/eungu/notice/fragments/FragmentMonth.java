@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,18 @@ public class FragmentMonth extends Fragment {
         month_btn = new DaySquareButton[35];
         LinearLayout[] ll = new LinearLayout[5];
 
+        TimePicker picker = view.findViewById(R.id.time_month);
+        picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                time.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                time.set(Calendar.MINUTE, minute);
+                onDataSetListener.setData(time, days, DBData.RING_MONTH, DBData.CONTENT_NORMAL);
+            }
+        });
+
+        fr.removeAllViews();
+
         for(int i = 0; i < 5; i++){
             ll[i] = new LinearLayout(getActivity());
             ll[i].setOrientation(LinearLayout.HORIZONTAL);
@@ -67,16 +78,6 @@ public class FragmentMonth extends Fragment {
             }
             fr.addView(ll[i]);
         }
-
-        TimePicker picker = new TimePicker(new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar));
-        picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                time.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                time.set(Calendar.MINUTE, minute);
-                onDataSetListener.setData(time, days, DBData.RING_MONTH, DBData.CONTENT_NORMAL);
-            }
-        });
         fr.addView(picker);
 
         return view;

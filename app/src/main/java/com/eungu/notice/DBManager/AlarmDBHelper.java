@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.Calendar;
 
@@ -80,7 +79,6 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
 
         int ret = db.update(ALARM_TABLE, values, "_ID="+(id+1), null);
         db.close();
-        Log.i("mTag", "0?"+item.getTime().getTime().toString());
         return ret;
     }
 

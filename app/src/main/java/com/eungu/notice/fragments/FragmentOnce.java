@@ -74,10 +74,14 @@ public class FragmentOnce extends Fragment {
                     }
 
                     time.setTime(tempC.getTime());
+                    onDataSetListener.setData(null, 1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);
                 }
                 else{
                     timeIp.setEnabled(true);
                     dateIp.setEnabled(true);
+                    timeIp.setText("");
+                    dateIp.setText("");
+                    onDataSetListener.setData(null, -1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);
                 }
             }
         });

@@ -1,5 +1,6 @@
 package com.eungu.notice;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -8,12 +9,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
-import com.eungu.notice.DBManager.AlarmDBHelper;
-import com.eungu.notice.DBManager.DBData;
-import com.eungu.notice.list_maker.AlarmListAdapter;
-
-import java.util.Calendar;
+import com.eungu.notice.DBManager.*;
+import com.eungu.notice.Extra.ComputeClass;
 
 public class AlarmReceiver extends BroadcastReceiver {
     AlarmDBHelper dbHelper;
@@ -23,11 +22,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         int data = intent.getIntExtra("mydata", -1);
         if(data!= -1){
             DBData dbdata = dbHelper.getData(data);
-            RingRing(context, dbdata.getTitle(), dbdata.getTimeToText(), data);
+            RingRing(context, dbdata.getTitle(), dbdata.getContent(), data);
             dbdata.setNowEnable(false);
             ComputeClass compute = new ComputeClass();
             dbdata.setTimeFromText(compute.compute_date(dbdata));
             dbHelper.updateData(dbdata, data);
+            Intent sendData = new Intent("DataBetweenSA");
+            intent.putExtra("data", 1);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(sendData);
         }
     }
 
@@ -35,9 +37,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
 
         builder.setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title + " id : " + id)
+                .setContentTitle(title)
                 .setContentText(content)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(Notification.DEFAULT_SOUND)
                 .setNumber(0);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -53,16 +56,5 @@ public class AlarmReceiver extends BroadcastReceiver {
         wl.acquire();
         wl.release();
         notificationManager.notify(id, builder.build());
-    }
-
-    void compute_date(Context context, DBData dbdata, int id){
-        switch (dbdata.getRingCategory()){
-            case DBData.RING_ONCE:
-                Calendar time = dbdata.getTime();
-                time.add(Calendar.DATE, 1);
-                dbdata.setNowEnable(false);
-                dbHelper.updateData(dbdata, id);
-                break;
-        }
     }
 }
