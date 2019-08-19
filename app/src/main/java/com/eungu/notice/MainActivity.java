@@ -11,10 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 
 import com.eungu.notice.DBManager.*;
@@ -57,35 +61,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void button_setting(){
-        ImageButton add_btn = findViewById(R.id.add_btn);
-        ImageButton delete_btn = findViewById(R.id.l_delete);
+        ImageButton setting_btn = findViewById(R.id.setting_btn);
         final Button delete_done = findViewById(R.id.delete_done_btn);
         delete_done.setVisibility(View.GONE);
 
-        add_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AlarmSettingActivity.class);
-                intent.putExtra("isNew", true);
-                startActivity(intent);
-            }
-        });
-        delete_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!isDeleting) {
-                    delete_done.setVisibility(View.VISIBLE);
-                    isDeleting = true;
-                    listAdapter.setDeleteMode(true);
-                }
-                else{
-                    delete_done.setVisibility(View.GONE);
-                    isDeleting = false;
-                    listAdapter.setDeleteMode(false);
-                }
-                listAdapter.notifyDataSetChanged();
-            }
-        });
         delete_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +84,43 @@ public class MainActivity extends AppCompatActivity {
                 listAdapter.notifyDataSetChanged();
             }
         });
+        setting_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, v);
+                MenuInflater inflater = popup.getMenuInflater();
+                Menu menu = popup.getMenu();
+                inflater.inflate(R.menu.popup_menu, menu);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.m_item_1:
+                                Intent intent = new Intent(getApplicationContext(), AlarmSettingActivity.class);
+                                intent.putExtra("isNew", true);
+                                startActivity(intent);
+                                break;
+                            case R.id.m_item_2:
+                                if(!isDeleting) {
+                                    delete_done.setVisibility(View.VISIBLE);
+                                    isDeleting = true;
+                                    listAdapter.setDeleteMode(true);
+                                }
+                                else{
+                                    delete_done.setVisibility(View.GONE);
+                                    isDeleting = false;
+                                    listAdapter.setDeleteMode(false);
+                                }
+                                listAdapter.notifyDataSetChanged();
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+            }
+        });
+
     }
 
     void main_sw_init(){

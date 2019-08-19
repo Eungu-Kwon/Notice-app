@@ -26,20 +26,9 @@
 
                 app:title="Notice"></android.support.v7.widget.Toolbar>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layoutDirection="rtl">
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/add_btn"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/add" />
+                android:layout_height="match_parent">
 
                 <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/setting_btn"
@@ -48,16 +37,9 @@
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/setting" />
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/l_delete"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:background="@drawable/delete"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="10dp"/>
+                    android:background="@drawable/setting"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"/>
 
                 <Switch
                     android:id="@+id/main_switch"
@@ -65,10 +47,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:checked="true"
-                    android:layout_marginBottom="10dp"
-                    android:text="알람" />
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_toLeftOf="@id/setting_btn"
+                    android:layout_alignParentBottom="true"
+                    android:track="@drawable/switch_selector"
+                    android:thumb="@drawable/switch_thumb" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
