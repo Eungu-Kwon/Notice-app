@@ -22,6 +22,11 @@ public class DBData implements Serializable {
     int contentCategory;
     String title, content;
     boolean  nowEnable;
+
+    public DBData() {
+        time = Calendar.getInstance();
+    }
+
     public DBData(Calendar _time, int _ringCategory, int _contentCategory, int ringData, String title, String _content, boolean _nowEnable) {
         this.time = _time;
         this.ringCategory = _ringCategory;

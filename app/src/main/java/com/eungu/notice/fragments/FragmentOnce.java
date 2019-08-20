@@ -31,9 +31,19 @@ public class FragmentOnce extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.f_alarm_once, container, false);
-        time = Calendar.getInstance();
-        time.set(Calendar.SECOND, 0);
-        time.set(Calendar.MILLISECOND, 0);
+
+        if(getArguments() == null){
+            time = Calendar.getInstance();
+            time.set(Calendar.SECOND, 0);
+            time.set(Calendar.MILLISECOND, 0);
+        }
+        else{
+            String arg_time = getArguments().getString("time", "none");
+            DBData d = new DBData();
+            d.setTimeFromText(arg_time);
+            time = d.getTime();
+        }
+
         makePickerDialog(view);
         return view;
     }

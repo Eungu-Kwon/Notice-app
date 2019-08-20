@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.eungu.notice.DBManager.*;
 import com.eungu.notice.Extra.ComputeClass;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "SettingFile";
+    final long FINISH_INTERVAL_TIME = 2000;
+    long backPressedTime = 0;
 
     ArrayList<AlarmListItem> list = null;
     AlarmListAdapter listAdapter = null;
@@ -192,6 +195,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isDeleting){
+            Button delete_done = findViewById(R.id.delete_done_btn);
+            delete_done.setVisibility(View.GONE);
+            isDeleting = false;
+            listAdapter.setDeleteMode(false);
+
+            listAdapter.notifyDataSetChanged();
+        }
+        else {
+            long tempTime = System.currentTimeMillis();
+            long intervalTime = tempTime - backPressedTime;
+
+            if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime)
+            {
+                super.onBackPressed();
+            }
+            else
+            {
+                backPressedTime = tempTime;
+                Toast.makeText(getApplicationContext(), "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {

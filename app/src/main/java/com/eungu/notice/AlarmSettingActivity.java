@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eungu.notice.DBManager.*;
@@ -28,7 +30,7 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
 
     Calendar time = null;
     String title, content;
-    int day = -1, ring_cat, content_cat;
+    int day = -1, ring_cat, content_cat, modi_idx, modi_frag;
     boolean isNew;
 
     @Override
@@ -40,8 +42,48 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        Fragment fragment;
 
-        fragmentTransaction.add(R.id.condition_fragment, new FragmentEmpty()).commit();
+        if(isNew){
+            fragment = new FragmentEmpty();
+        }
+        else{
+            modi_idx = intent.getExtras().getInt("modi_idx", -1);
+            AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
+            DBData data = dbHelper.getData(modi_idx);
+
+            TextView t1 = findViewById(R.id.title_text);
+            TextView t2 = findViewById(R.id.content_text);
+
+            t1.setText(data.getTitle());
+            t2.setText(data.getContent());
+
+            modi_frag = data.getRingCategory();
+            Bundle b = new Bundle();
+            switch (modi_frag){
+                case DBData.RING_ONCE:
+                    fragment = new FragmentOnce();
+                    b.putString("time", data.getTimeToText());
+                    fragment.setArguments(b);
+                    break;
+                case DBData.RING_DAYOFWEEK:
+                    fragment = new FragmentWeekOfDay();
+                    b.putInt("r_data", data.getRingData());
+                    b.putString("time", data.getTimeToText());
+                    fragment.setArguments(b);
+                    break;
+                case DBData.RING_MONTH:
+                    fragment = new FragmentMonth();
+                    b.putInt("r_data", data.getRingData());
+                    b.putString("time", data.getTimeToText());
+                    fragment.setArguments(b);
+                    break;
+                default:
+                    fragment = new FragmentEmpty();
+                    break;
+            }
+        }
+        fragmentTransaction.add(R.id.condition_fragment, fragment).commit();
         setConditionButton();
         setDoneButton();
     }
@@ -140,7 +182,11 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
                     dbData.setTimeFromText(compute.compute_date(dbData));
                 }
 
-                dbHelper.addData(dbData);
+                if(isNew)
+                    dbHelper.addData(dbData);
+                else{
+                    dbHelper.updateData(dbData, modi_idx);
+                }
                 dbHelper.computeID();
 
                 if(new ComputeClass().isLaunchingService(getApplicationContext(), NotiService.class)){

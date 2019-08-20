@@ -24,12 +24,15 @@ public class NotiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "main");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "main");
+        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("서비스 실행중")
                 .setContentText("TEST")
                 .setPriority(NotificationCompat.PRIORITY_MIN)
+                .setContentIntent(pendingIntent)
                 .setNumber(0);
 
         // 알림 표시

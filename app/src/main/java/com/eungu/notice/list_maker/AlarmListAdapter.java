@@ -14,8 +14,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eungu.notice.AlarmReceiver;
+import com.eungu.notice.AlarmSettingActivity;
 import com.eungu.notice.Extra.ComputeClass;
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
@@ -42,6 +44,17 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
             text_time = itemView.findViewById(R.id.cell_time);
             sw = itemView.findViewById(R.id.is_item_enable);
             delete_check = itemView.findViewById(R.id.delete_checkBox);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent modiIntent = new Intent(v.getContext(), AlarmSettingActivity.class);
+                    modiIntent.putExtra("isNew", false);
+                    modiIntent.putExtra("modi_idx", getAdapterPosition());
+                    v.getContext().startActivity(modiIntent);
+                    Toast.makeText(v.getContext(), "num : " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

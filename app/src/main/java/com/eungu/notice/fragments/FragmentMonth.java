@@ -1,6 +1,7 @@
 package com.eungu.notice.fragments;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,21 +31,23 @@ public class FragmentMonth extends Fragment {
         View view = inflater.inflate(R.layout.f_alarm_month, container, false);
         LinearLayout fr = view.findViewById(R.id.frame_month);
 
-        time = Calendar.getInstance();
-        time.set(Calendar.SECOND, 0);
-        time.set(Calendar.MILLISECOND, 0);
+        if(getArguments() == null){
+            time = Calendar.getInstance();
+            time.set(Calendar.SECOND, 0);
+            time.set(Calendar.MILLISECOND, 0);
+        }
+        else{
+            String arg_time = getArguments().getString("time", "none");
+            DBData d = new DBData();
+            d.setTimeFromText(arg_time);
+            time = d.getTime();
+            days = getArguments().getInt("r_data");
+        }
+
         month_btn = new DaySquareButton[35];
         LinearLayout[] ll = new LinearLayout[5];
 
-        TimePicker picker = view.findViewById(R.id.time_month);
-        picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                time.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                time.set(Calendar.MINUTE, minute);
-                onDataSetListener.setData(time, days, DBData.RING_MONTH, DBData.CONTENT_NORMAL);
-            }
-        });
+        TimePicker picker =  setTimePicker(view);
 
         fr.removeAllViews();
 
@@ -62,6 +65,7 @@ public class FragmentMonth extends Fragment {
                 bottomButtonParams.weight = 1;
                 month_btn[idx].setLayoutParams(bottomButtonParams);
                 if(idx < 31){
+                    setBtnIcon(idx);
                     month_btn[idx].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -81,6 +85,28 @@ public class FragmentMonth extends Fragment {
         fr.addView(picker);
 
         return view;
+    }
+
+    @SuppressWarnings("deprecation")
+    TimePicker setTimePicker(View view){
+        TimePicker picker = view.findViewById(R.id.time_month);
+        if (Build.VERSION.SDK_INT >= 23) {
+            picker.setHour(time.get(Calendar.HOUR_OF_DAY));
+            picker.setMinute(time.get(Calendar.MINUTE));
+        }
+        else {
+            picker.setCurrentHour(time.get(Calendar.HOUR_OF_DAY));
+            picker.setCurrentMinute(time.get(Calendar.MINUTE));
+        }
+        picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                time.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                time.set(Calendar.MINUTE, minute);
+                onDataSetListener.setData(time, days, DBData.RING_MONTH, DBData.CONTENT_NORMAL);
+            }
+        });
+        return picker;
     }
 
     @Override

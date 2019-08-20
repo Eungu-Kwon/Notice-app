@@ -2,6 +2,7 @@ package com.eungu.notice.fragments;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
@@ -24,18 +25,29 @@ public class FragmentWeekOfDay extends Fragment{
 
     private DateSetListener onDataSetListener = null;
     Calendar time = null;
-    private int days;
+    private int days = 0;
     Button[] days_btn;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.f_alarm_week_of_day, container, false);
-        time = Calendar.getInstance();
-        time.set(Calendar.SECOND, 0);
-        time.set(Calendar.MILLISECOND, 0);
+
+        if(getArguments() == null){
+            time = Calendar.getInstance();
+            time.set(Calendar.SECOND, 0);
+            time.set(Calendar.MILLISECOND, 0);
+        }
+        else{
+            String arg_time = getArguments().getString("time", "none");
+            DBData d = new DBData();
+            d.setTimeFromText(arg_time);
+            time = d.getTime();
+            days = getArguments().getInt("r_data");
+        }
         setDays(view);
         setTime(view);
+        buttonInit();
         return view;
     }
 
@@ -68,8 +80,17 @@ public class FragmentWeekOfDay extends Fragment{
         }
     }
 
+    @SuppressWarnings("deprecation")
     void setTime(View view){
         TimePicker picker = view.findViewById(R.id.wd_timepicker);
+        if (Build.VERSION.SDK_INT >= 23) {
+            picker.setHour(time.get(Calendar.HOUR_OF_DAY));
+            picker.setMinute(time.get(Calendar.MINUTE));
+        }
+        else {
+            picker.setCurrentHour(time.get(Calendar.HOUR_OF_DAY));
+            picker.setCurrentMinute(time.get(Calendar.MINUTE));
+        }
         picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
@@ -84,6 +105,15 @@ public class FragmentWeekOfDay extends Fragment{
             days_btn[i].setBackgroundResource(R.drawable.circle_xml);
         }
         else days_btn[i].setBackgroundResource(android.R.color.transparent);
+    }
+
+    void buttonInit(){
+        for(int i = 0; i < 7; i++){
+            if((days & 1 << i) > 0){
+                days_btn[i].setBackgroundResource(R.drawable.circle_xml);
+            }
+            else days_btn[i].setBackgroundResource(android.R.color.transparent);
+        }
     }
 
     String WhichDay(int day){
@@ -143,7 +173,6 @@ public class FragmentWeekOfDay extends Fragment{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        days = 0;
         onDataSetListener = (DateSetListener)context;
     }
 

@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:visibility="gone"
-            android:text="Button" />
+            android:text="삭제" />
 
         <FrameLayout
             android:layout_width="match_parent"
