@@ -48,11 +48,12 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent modiIntent = new Intent(v.getContext(), AlarmSettingActivity.class);
-                    modiIntent.putExtra("isNew", false);
-                    modiIntent.putExtra("modi_idx", getAdapterPosition());
-                    v.getContext().startActivity(modiIntent);
-                    Toast.makeText(v.getContext(), "num : " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                    if(!isDeleting) {
+                        Intent modiIntent = new Intent(v.getContext(), AlarmSettingActivity.class);
+                        modiIntent.putExtra("isNew", false);
+                        modiIntent.putExtra("modi_idx", getAdapterPosition());
+                        v.getContext().startActivity(modiIntent);
+                    }
                 }
             });
         }

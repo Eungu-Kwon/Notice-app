@@ -42,6 +42,7 @@ public class FragmentOnce extends Fragment {
             DBData d = new DBData();
             d.setTimeFromText(arg_time);
             time = d.getTime();
+            setText(time, view);
         }
 
         makePickerDialog(view);
@@ -61,7 +62,7 @@ public class FragmentOnce extends Fragment {
     }
 
     @SuppressWarnings("deprecation")
-    void makePickerDialog(View view){
+    void makePickerDialog(final View view){
         final CheckBox cb = view.findViewById(R.id.now_check);
         final EditText timeIp = view.findViewById(R.id.time_input);
         final EditText dateIp = view.findViewById(R.id.date_input);
@@ -71,17 +72,10 @@ public class FragmentOnce extends Fragment {
                 if(isChecked){
                     Calendar tempC = Calendar.getInstance();
                     tempC.set(Calendar.SECOND, 0);
-                    int t_hour = tempC.get(Calendar.HOUR_OF_DAY);
-                    int t_minute = tempC.get(Calendar.MINUTE);
 
                     timeIp.setEnabled(false);
                     dateIp.setEnabled(false);
-                    dateIp.setText(tempC.get(Calendar.YEAR) + "년 " + (tempC.get(Calendar.MONTH)+1) + "월 "+ tempC.get(Calendar.DAY_OF_MONTH) + "일");
-                    if(t_hour < 12) timeIp.setText("오전 " + t_hour + "시 "+ t_minute + "분");
-                    else {
-                        if(t_hour == 12) timeIp.setText("오후 " + 12 + "시 "+ t_minute + "분");
-                        else timeIp.setText("오후 " + (t_hour - 12) + "시 "+ t_minute + "분");
-                    }
+                    setText(tempC, view);
 
                     time.setTime(tempC.getTime());
                     onDataSetListener.setData(null, 1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);
@@ -104,13 +98,9 @@ public class FragmentOnce extends Fragment {
                 tp = new TimePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        if(hourOfDay < 12) timeIp.setText("오전 " + hourOfDay + "시 "+ minute + "분");
-                        else {
-                            if(hourOfDay == 12) timeIp.setText("오후 " + 12 + "시 "+ minute + "분");
-                            else timeIp.setText("오후 " + (hourOfDay - 12) + "시 "+ minute + "분");
-                        }
                         time.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         time.set(Calendar.MINUTE, minute);
+                        setText(time, view);
                         onDataSetListener.setData(time, -1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);
                     }
                 }, t_hour, t_minute, DateFormat.is24HourFormat(getActivity()));
@@ -128,10 +118,10 @@ public class FragmentOnce extends Fragment {
                 DatePickerDialog dp = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        dateIp.setText(year + "년 " + (month+1) + "월 " + dayOfMonth + "일");
                         time.set(Calendar.YEAR, year);
                         time.set(Calendar.MONTH, month);
                         time.set(Calendar.DATE, dayOfMonth);
+                        setText(time, view);
                         onDataSetListener.setData(time, -1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);
                     }
                 }, t_year, t_month, t_day);
@@ -139,5 +129,20 @@ public class FragmentOnce extends Fragment {
                 dp.show();
             }
         });
+    }
+
+    void setText(Calendar c, View view){
+        final EditText timeIp = view.findViewById(R.id.time_input);
+        final EditText dateIp = view.findViewById(R.id.date_input);
+
+        int t_hour = c.get(Calendar.HOUR_OF_DAY);
+        int t_minute = c.get(Calendar.MINUTE);
+
+        dateIp.setText(c.get(Calendar.YEAR) + "년 " + (c.get(Calendar.MONTH)+1) + "월 "+ c.get(Calendar.DAY_OF_MONTH) + "일");
+        if(t_hour < 12) timeIp.setText("오전 " + t_hour + "시 "+ t_minute + "분");
+        else {
+            if(t_hour == 12) timeIp.setText("오후 " + 12 + "시 "+ t_minute + "분");
+            else timeIp.setText("오후 " + (t_hour - 12) + "시 "+ t_minute + "분");
+        }
     }
 }

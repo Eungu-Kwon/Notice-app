@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void button_setting(){
-        ImageButton setting_btn = findViewById(R.id.setting_btn);
+        final ImageButton setting_btn = findViewById(R.id.setting_btn);
         final Button delete_done = findViewById(R.id.delete_done_btn);
         delete_done.setVisibility(View.GONE);
 
@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 dbHelper.computeID();
                 delete_done.setVisibility(View.GONE);
+                setting_btn.setVisibility(View.VISIBLE);
+                main_switch.setVisibility(View.VISIBLE);
                 isDeleting = false;
                 listAdapter.setDeleteMode(false);
 
@@ -108,11 +110,8 @@ public class MainActivity extends AppCompatActivity {
                                     delete_done.setVisibility(View.VISIBLE);
                                     isDeleting = true;
                                     listAdapter.setDeleteMode(true);
-                                }
-                                else{
-                                    delete_done.setVisibility(View.GONE);
-                                    isDeleting = false;
-                                    listAdapter.setDeleteMode(false);
+                                    setting_btn.setVisibility(View.INVISIBLE);
+                                    main_switch.setVisibility(View.INVISIBLE);
                                 }
                                 listAdapter.notifyDataSetChanged();
                                 break;
@@ -200,8 +199,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(isDeleting){
+            ImageButton setting_btn = findViewById(R.id.setting_btn);
             Button delete_done = findViewById(R.id.delete_done_btn);
             delete_done.setVisibility(View.GONE);
+            setting_btn.setVisibility(View.VISIBLE);
+            main_switch.setVisibility(View.VISIBLE);
             isDeleting = false;
             listAdapter.setDeleteMode(false);
 
