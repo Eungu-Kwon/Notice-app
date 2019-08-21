@@ -1,4 +1,4 @@
-package com.eungu.notice;
+package com.eungu.notice.List_Menu;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -20,9 +20,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.eungu.notice.Extra.AlarmReceiver;
 import com.eungu.notice.DBManager.*;
 import com.eungu.notice.Extra.ComputeClass;
-import com.eungu.notice.fragments.*;
+import com.eungu.notice.List_Menu.fragments.*;
+import com.eungu.notice.R;
 
 import java.util.Calendar;
 

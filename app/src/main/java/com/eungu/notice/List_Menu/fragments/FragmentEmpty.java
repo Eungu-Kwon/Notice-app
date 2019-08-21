@@ -1,4 +1,4 @@
-package com.eungu.notice.fragments;
+package com.eungu.notice.List_Menu.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

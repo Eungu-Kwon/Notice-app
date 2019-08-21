@@ -1,4 +1,4 @@
-package com.eungu.notice;
+package com.eungu.notice.Extra;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.eungu.notice.DBManager.*;
 import com.eungu.notice.Extra.ComputeClass;
+import com.eungu.notice.R;
 
 public class AlarmReceiver extends BroadcastReceiver {
     AlarmDBHelper dbHelper;

@@ -1,4 +1,4 @@
-package com.eungu.notice.fragments;
+package com.eungu.notice.List_Menu.fragments;
 
 import android.content.Context;
 import android.os.Build;
@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import com.eungu.notice.DBManager.DBData;
-import com.eungu.notice.DaySquareButton;
 import com.eungu.notice.R;
 
 import java.util.Calendar;

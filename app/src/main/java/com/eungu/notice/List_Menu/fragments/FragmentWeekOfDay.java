@@ -1,15 +1,11 @@
-package com.eungu.notice.fragments;
+package com.eungu.notice.List_Menu.fragments;
 
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

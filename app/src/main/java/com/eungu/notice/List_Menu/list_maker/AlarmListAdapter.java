@@ -1,4 +1,4 @@
-package com.eungu.notice.list_maker;
+package com.eungu.notice.List_Menu.list_maker;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -14,10 +14,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.eungu.notice.AlarmReceiver;
-import com.eungu.notice.AlarmSettingActivity;
+import com.eungu.notice.Extra.AlarmReceiver;
+import com.eungu.notice.List_Menu.AlarmSettingActivity;
 import com.eungu.notice.Extra.ComputeClass;
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;

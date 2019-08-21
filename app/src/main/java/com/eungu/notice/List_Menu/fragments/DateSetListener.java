@@ -1,4 +1,4 @@
-package com.eungu.notice.fragments;
+package com.eungu.notice.List_Menu.fragments;
 
 import java.util.Calendar;
 

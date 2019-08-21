@@ -26,9 +26,9 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".AlarmReceiver"/>
-        <activity android:name=".AlarmSettingActivity"/>
-        <service android:name=".NotiService"/>
+        <receiver android:name=".Extra.AlarmReceiver"/>
+        <activity android:name=".List_Menu.AlarmSettingActivity"/>
+        <service android:name=".List_Menu.NotiService"/>
     </application>
 
 </manifest>

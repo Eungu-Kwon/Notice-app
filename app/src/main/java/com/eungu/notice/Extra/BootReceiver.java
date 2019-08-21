@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
+import com.eungu.notice.List_Menu.NotiService;
 import com.eungu.notice.MainActivity;
-import com.eungu.notice.NotiService;
 
 public class BootReceiver extends BroadcastReceiver {
     @Override

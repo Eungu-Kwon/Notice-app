@@ -1,4 +1,4 @@
-package com.eungu.notice;
+package com.eungu.notice.List_Menu.fragments;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatButton;

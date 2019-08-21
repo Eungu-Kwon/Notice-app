@@ -1,6 +1,4 @@
-package com.eungu.notice.list_maker;
-
-import android.widget.Switch;
+package com.eungu.notice.List_Menu.list_maker;
 
 import java.util.Calendar;
 
