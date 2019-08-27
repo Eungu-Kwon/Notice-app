@@ -104,6 +104,7 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.View
                     if(data.getTime().compareTo(Calendar.getInstance()) < 0) {
                         ComputeClass compute = new ComputeClass();
                         data.setTimeFromText(compute.compute_date(data));
+                        viewHolder.text_time.setText(data.getTimeToText());
                     }
                     if(Build.VERSION.SDK_INT >= 23)
                         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);

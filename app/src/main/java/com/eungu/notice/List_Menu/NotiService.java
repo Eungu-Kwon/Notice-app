@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import com.eungu.notice.Extra.AlarmReceiver;
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
+import com.eungu.notice.MainActivity;
 import com.eungu.notice.R;
 
 public class NotiService extends Service {
@@ -27,7 +28,7 @@ public class NotiService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "main");
-        Intent mainIntent = new Intent(getApplicationContext(), ListFragment.class);
+        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setSmallIcon(R.mipmap.ic_launcher)
