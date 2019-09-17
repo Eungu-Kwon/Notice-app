@@ -191,19 +191,18 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
                 }
                 dbHelper.computeID();
 
-                if(new ComputeClass().isLaunchingService(getApplicationContext(), NotiService.class)){
-                    Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-                    mAlarmIntent.putExtra("mydata", dbHelper.getItemsCount() - 1);
+                Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                mAlarmIntent.putExtra("mydata", dbHelper.getItemsCount() - 1);
 
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), dbHelper.getItemsCount(), mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), dbHelper.getItemsCount(), mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    if(Build.VERSION.SDK_INT >= 23)
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
-                    else if(Build.VERSION.SDK_INT >= 19)
-                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
-                    else
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
-                }
+                if(Build.VERSION.SDK_INT >= 23)
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
+                else if(Build.VERSION.SDK_INT >= 19)
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
+                else
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, dbData.getTime().getTimeInMillis(), pendingIntent);
+
                 finish();
             }
         });

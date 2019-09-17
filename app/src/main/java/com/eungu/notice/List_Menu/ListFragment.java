@@ -38,8 +38,6 @@ import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
 
-    public static final String PREFS_NAME = "SettingFile";
-
     ArrayList<AlarmListItem> list = null;
     AlarmListAdapter listAdapter = null;
     AFragmentListener fragmentListener;
@@ -56,7 +54,7 @@ public class ListFragment extends Fragment {
         mView = view;
         button_setting();
         init_list();
-        main_sw_init();
+        //main_sw_init();
         return view;
     }
 
@@ -141,46 +139,40 @@ public class ListFragment extends Fragment {
 
     }
 
-    void main_sw_init(){
-        main_switch = (Switch)mView.findViewById(R.id.main_switch);
-
-        isServiceRunning = new ComputeClass().isLaunchingService(mView.getContext(), NotiService.class);
-        main_switch.setChecked(isServiceRunning);
-        listAdapter.setEnable(isServiceRunning);
-        main_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Intent main_service = new Intent(mView.getContext(), NotiService.class);
-                if(isChecked) {
-                    SharedPreferences settings = mView.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("isRunning", true);
-                    editor.commit();
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        mView.getContext().startForegroundService(main_service);
-                    }
-                    else
-                        mView.getContext().startService(main_service);
-                }
-                else {
-                    //TODO make dialog
-                    SharedPreferences settings = mView.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("isRunning", false);
-                    editor.commit();
-                    mView.getContext().stopService(main_service);
-                }
-                listAdapter.setEnable(isChecked);
-                listAdapter.notifyDataSetChanged();
-                isServiceRunning = isChecked;
-            }
-        });
-//        if(isServiceRunning) {
-//            Intent main_service = new Intent(mView.getContext(), NotiService.class);
-//            mView.getContext().stopService(main_service);
-//            mView.getContext().startService(main_service);
-//        }
-    }
+//    void main_sw_init(){
+//        main_switch = (Switch)mView.findViewById(R.id.main_switch);
+//
+//        isServiceRunning = new ComputeClass().isLaunchingService(mView.getContext(), NotiService.class);
+//        main_switch.setChecked(isServiceRunning);
+//        listAdapter.setEnable(isServiceRunning);
+//        main_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                Intent main_service = new Intent(mView.getContext(), NotiService.class);
+//                if(isChecked) {
+//                    SharedPreferences settings = mView.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = settings.edit();
+//                    editor.putBoolean("isRunning", true);
+//                    editor.commit();
+//                    if (Build.VERSION.SDK_INT >= 26) {
+//                        mView.getContext().startForegroundService(main_service);
+//                    }
+//                    else
+//                        mView.getContext().startService(main_service);
+//                }
+//                else {
+//                    SharedPreferences settings = mView.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = settings.edit();
+//                    editor.putBoolean("isRunning", false);
+//                    editor.commit();
+//                    mView.getContext().stopService(main_service);
+//                }
+//                listAdapter.setEnable(isChecked);
+//                listAdapter.notifyDataSetChanged();
+//                isServiceRunning = isChecked;
+//            }
+//        });
+//    }
 
     void init_list(){
         list = new ArrayList<>();

@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -19,6 +20,7 @@ import com.eungu.notice.R;
 
 public class NotiService extends Service {
     AlarmManager alarmManager = null;
+    public static final String PREFS_NAME = "SettingFile";
 
     @Override
     public void onCreate() {
@@ -48,7 +50,13 @@ public class NotiService extends Service {
 
         startForeground(678, builder.build());
 
-        setAlarm();
+        //setAlarm();
+
+
+        SharedPreferences setting = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = setting.edit();
+        editor.putBoolean("isRunning", true);
+        editor.commit();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -93,13 +101,18 @@ public class NotiService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
-        for(int i = 0; i < dbHelper.getItemsCount(); i++) {
-            Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.cancel(pendingIntent);
-            pendingIntent.cancel();
-        }
+//        AlarmDBHelper dbHelper = new AlarmDBHelper(getApplicationContext(), "ALARM_TABLE", null, 1);
+//        for(int i = 0; i < dbHelper.getItemsCount(); i++) {
+//            Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//            alarmManager.cancel(pendingIntent);
+//            pendingIntent.cancel();
+//        }
+
+        SharedPreferences setting = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = setting.edit();
+        editor.putBoolean("isRunning", false);
+        editor.commit();
 
     }
 }

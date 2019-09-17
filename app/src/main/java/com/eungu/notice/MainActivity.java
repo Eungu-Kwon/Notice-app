@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity implements AFragmentListener
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_bar);
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        final FragmentManager fm = getSupportFragmentManager();
+        final FragmentTransaction fragmentTransaction = fm.beginTransaction();
         homeFragment = new HomeFragment();
         fragment = new ListFragment();
 
@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements AFragmentListener
                     case R.id.bottom_list:
                         replaceFragment(fragment);
                         break;
+                    case R.id.bottom_setting:
+                        fm.popBackStack();
+
                 }
                 return true;
             }
@@ -62,7 +65,9 @@ public class MainActivity extends AppCompatActivity implements AFragmentListener
     void replaceFragment(Fragment fragment){
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.main_frame, fragment).commit();
+        fragmentTransaction.replace(R.id.main_frame, fragment);
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override

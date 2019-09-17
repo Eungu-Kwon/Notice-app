@@ -41,19 +41,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"/>
 
-                <Switch
-                    android:id="@+id/main_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:checked="true"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_toLeftOf="@id/setting_btn"
-                    android:layout_alignParentBottom="true"
-                    android:track="@drawable/switch_selector"
-                    android:thumb="@drawable/switch_thumb" />
-
             </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>

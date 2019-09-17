@@ -2,8 +2,10 @@ package com.eungu.notice.Extra;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.eungu.notice.DBManager.DBData;
+import com.eungu.notice.List_Menu.NotiService;
 
 import java.util.Calendar;
 
@@ -42,16 +44,19 @@ public class ComputeClass {
         return data.getTimeToText();
     }
 
-    @SuppressWarnings("deprecation")
-    public final Boolean isLaunchingService(Context mContext, Class<?> c){
+    public final Boolean isLaunchingService(Context mContext){
 
-        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (c.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
+//        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            if (c.getName().equals(service.service.getClassName())) {
+//                return true;
+//            }
+//        }
+//
+//        return  false;
 
-        return  false;
+        SharedPreferences setting = mContext.getSharedPreferences(NotiService.PREFS_NAME, Context.MODE_PRIVATE);
+        boolean b = setting.getBoolean("isRunnung", false);
+        return b;
     }
 }
