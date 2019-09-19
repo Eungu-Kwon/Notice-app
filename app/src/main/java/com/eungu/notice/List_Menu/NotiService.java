@@ -8,19 +8,19 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import com.eungu.notice.Extra.AlarmReceiver;
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
-import com.eungu.notice.MainActivity;
+import com.eungu.notice.Extra.AlarmReceiver;
+import com.eungu.notice.Extra.SettingDataHelper;
 import com.eungu.notice.R;
 
 public class NotiService extends Service {
     AlarmManager alarmManager = null;
-    public static final String PREFS_NAME = "SettingFile";
 
     @Override
     public void onCreate() {
@@ -29,13 +29,16 @@ public class NotiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        SettingDataHelper dataHelper = new SettingDataHelper(getApplicationContext());
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "main");
-        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+//        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent mainIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com"));
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("서비스 실행중")
-                .setContentText("TEST")
+                .setContentTitle(dataHelper.getStringData(SettingDataHelper.MAIN_TITLE, "알림 제목"))
+                .setContentText(dataHelper.getStringData(SettingDataHelper.MAIN_CONTENT, "문구를 변경하려면 터치"))
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setContentIntent(pendingIntent)
                 .setNumber(0);
@@ -50,10 +53,7 @@ public class NotiService extends Service {
 
         startForeground(678, builder.build());
 
-        //setAlarm();
-
-
-        SharedPreferences setting = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences setting = getApplicationContext().getSharedPreferences(SettingDataHelper.PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = setting.edit();
         editor.putBoolean("isRunning", true);
         editor.commit();
@@ -80,14 +80,6 @@ public class NotiService extends Service {
                 else
                     alarmManager.set(AlarmManager.RTC_WAKEUP, data.getTime().getTimeInMillis(), pendingIntent);
             }
-//            else{
-//                Intent mAlarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-//                mAlarmIntent.putExtra("mydata", i);
-//
-//                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), i, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                alarmManager.cancel(pendingIntent);
-//                pendingIntent.cancel();
-//            }
         }
     }
 
@@ -109,7 +101,7 @@ public class NotiService extends Service {
 //            pendingIntent.cancel();
 //        }
 
-        SharedPreferences setting = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences setting = getApplicationContext().getSharedPreferences(SettingDataHelper.PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = setting.edit();
         editor.putBoolean("isRunning", false);
         editor.commit();

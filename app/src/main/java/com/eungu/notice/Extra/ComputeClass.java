@@ -44,7 +44,7 @@ public class ComputeClass {
         return data.getTimeToText();
     }
 
-    public final Boolean isLaunchingService(Context mContext){
+    public static final Boolean isLaunchingService(Context mContext){
 
 //        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
 //        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -55,8 +55,8 @@ public class ComputeClass {
 //
 //        return  false;
 
-        SharedPreferences setting = mContext.getSharedPreferences(NotiService.PREFS_NAME, Context.MODE_PRIVATE);
-        boolean b = setting.getBoolean("isRunnung", false);
+        SharedPreferences setting = mContext.getSharedPreferences(SettingDataHelper.PREFS_NAME, Context.MODE_PRIVATE);
+        boolean b = setting.getBoolean("isRunning", false);
         return b;
     }
 }

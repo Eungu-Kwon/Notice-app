@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@drawable/card_background">
+
+    <TextView
+        android:id="@+id/card_title_rear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="30dp"
+        android:text="탭해서 뒤집기" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/card_btn1"
+            android:layout_width="match_parent"
+            android:background="@android:color/transparent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="설정" />
+
+        <Button
+            android:id="@+id/card_btn2"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:text="아이콘 설정" />
+    </LinearLayout>
+
+</RelativeLayout>

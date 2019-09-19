@@ -29,6 +29,7 @@
         <receiver android:name=".Extra.AlarmReceiver"/>
         <activity android:name=".List_Menu.AlarmSettingActivity"/>
         <service android:name=".List_Menu.NotiService"/>
+        <activity android:name=".Home_Menu.NotiServiceSetting"/>
     </application>
 
 </manifest>
