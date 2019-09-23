@@ -21,6 +21,8 @@ import com.eungu.notice.R;
 
 public class NotiService extends Service {
     AlarmManager alarmManager = null;
+    Intent mainIntent;
+    PendingIntent pendingIntent;
 
     @Override
     public void onCreate() {
@@ -33,8 +35,22 @@ public class NotiService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "main");
 //        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-        Intent mainIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com"));
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        switch(Integer.parseInt(dataHelper.getStringData(SettingDataHelper.MAIN_CATEGORY, "0"))){
+            case 1:
+                mainIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataHelper.getStringData(SettingDataHelper.URL, null)));
+                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            case 2:
+                mainIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataHelper.getStringData(SettingDataHelper.APP, null)));
+                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            case 3:
+                mainIntent = new Intent("android.intent.action.DIAL", Uri.parse(dataHelper.getStringData(SettingDataHelper.CALL, null)));
+                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+        }
+
 
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(dataHelper.getStringData(SettingDataHelper.MAIN_TITLE, "알림 제목"))

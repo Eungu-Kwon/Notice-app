@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="#F2EEE5">
 
     <TextView
         android:id="@+id/noti_title_label"
@@ -49,29 +49,68 @@
         android:layout_centerHorizontal="true"/>
 
     <RadioGroup
-        android:layout_width="wrap_content"
+        android:id="@+id/noti_radio_group"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/noti_condition_label"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/noti_radio_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_none" />
 
         <RadioButton
             android:id="@+id/noti_radio_url"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="인터넷 열기" />
+            android:drawableLeft="@drawable/ic_internet_browser" />
 
         <RadioButton
             android:id="@+id/noti_radio_app"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="어플 열기" />
+            android:drawableLeft="@drawable/ic_apps"/>
 
         <RadioButton
             android:id="@+id/noti_radio_call"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="전화 걸기" />
+            android:drawableLeft="@drawable/ic_phone_call"/>
+
     </RadioGroup>
+
+    <Button
+        android:id="@+id/noti_button_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="연락처 선택"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/noti_radio_group"/>
+
+    <EditText
+        android:id="@+id/noti_text_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="URL 주소"
+        android:inputType="textPersonName"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/noti_radio_group"/>
+
+    <Button
+        android:id="@+id/noti_button_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="어플 선택"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        android:layout_below="@id/noti_radio_group"/>
 
     <Button
         android:id="@+id/noti_done"
@@ -79,5 +118,6 @@
         android:layout_height="wrap_content"
         android:text="완료"
         android:layout_alignParentBottom="true"
+        android:background="#FFC301"
         />
 </RelativeLayout>
