@@ -94,7 +94,6 @@ public class HomeFragment extends Fragment {
 
         TextView card_title = v.findViewById(R.id.card_title);
         TextView card_content = v.findViewById(R.id.card_content);
-
         card_title.setText(dataHelper.getStringData(SettingDataHelper.MAIN_TITLE, "알림제목"));
         card_content.setText(dataHelper.getStringData(SettingDataHelper.MAIN_CONTENT,"탭해서 문구설정"));
     }

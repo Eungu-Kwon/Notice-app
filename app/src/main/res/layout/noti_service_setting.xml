@@ -90,6 +90,7 @@
         android:text="연락처 선택"
         android:visibility="gone"
         android:layout_marginTop="20dp"
+        android:background="#F88C65"
         android:layout_below="@id/noti_radio_group"/>
 
     <EditText
@@ -110,6 +111,7 @@
         android:text="어플 선택"
         android:layout_marginTop="20dp"
         android:visibility="gone"
+        android:background="#F88C65"
         android:layout_below="@id/noti_radio_group"/>
 
     <Button

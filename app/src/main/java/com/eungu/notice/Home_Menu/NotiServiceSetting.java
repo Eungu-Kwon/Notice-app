@@ -22,12 +22,13 @@ import com.eungu.notice.R;
 
 public class NotiServiceSetting extends AppCompatActivity implements RadioButton.OnCheckedChangeListener, Button.OnClickListener {
     int category = 0;
-
+    static final String pNameStr = "peoplename";
+    String pName;
     EditText urlText;
     Button appButton;
     Button addressButton;
-    String appString;
     String addressString;
+    String appPackage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
         done_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dataHelper.settingStringData(pNameStr, null);
                 switch (category){
                     case 1:
                         String mUrl = urlText.getText().toString();
@@ -60,7 +62,7 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                         dataHelper.settingStringData(SettingDataHelper.URL, mUrl);
                         break;
                     case 2:
-                        dataHelper.settingStringData(SettingDataHelper.APP, appString);
+                        dataHelper.settingStringData(SettingDataHelper.APP, appPackage);
                         break;
                     case 3:
                         if(addressString == null || addressString == ""){
@@ -68,6 +70,7 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                             return;
                         }
                         dataHelper.settingStringData(SettingDataHelper.CALL, addressString);
+                        dataHelper.settingStringData(pNameStr, pName);
                         break;
                 }
 
@@ -117,10 +120,16 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                 addressString = dataHelper.getStringData(SettingDataHelper.CALL, "");
                 break;
         }
+
+        pName = dataHelper.getStringData(pNameStr, null);
+        if(pName != null){
+            addressButton.setText(pName + "님께 전화");
+        }
     }
 
     void setButtons(){
         addressButton.setOnClickListener(this);
+        appButton.setOnClickListener(this);
     }
 
     @Override
@@ -164,12 +173,8 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                 startActivityForResult(addressIntent, 0);
                 break;
             case R.id.noti_button_app:
-                PackageManager packageManager = getPackageManager();
-
-                Intent appIntent = new Intent(Intent.ACTION_MAIN);
-                appIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-                startActivityForResult(appIntent, 0);
+                Intent appIntent = new Intent(getApplicationContext(), AppSelectActivity.class);
+                startActivityForResult(appIntent, 1);
                 break;
         }
     }
@@ -177,13 +182,23 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode == RESULT_OK){
-            Cursor cursor = getContentResolver().query(data.getData(), new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                    ContactsContract.CommonDataKinds.Phone.NUMBER}, null, null, null);
-            cursor.moveToFirst();
-            addressString = cursor.getString(1);
-            addressString = addressString.replace("-", "");
-            addressString = "tel:" + addressString;
-            addressButton.setText(cursor.getString(0) + "님께 전화");
+            switch (requestCode){
+                case 0:
+                    Cursor cursor = getContentResolver().query(data.getData(), new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                            ContactsContract.CommonDataKinds.Phone.NUMBER}, null, null, null);
+                    cursor.moveToFirst();
+                    addressString = cursor.getString(1);
+                    addressString = addressString.replace("-", "");
+                    addressString = "tel:" + addressString;
+                    pName = cursor.getString(0);
+                    addressButton.setText(pName + "님께 전화");
+                    break;
+                case 1:
+                    String appName = data.getStringExtra("appName");
+                    appPackage = data.getStringExtra("appPackage");
+                    appButton.setText(appName + " 실행");
+                    break;
+            }
         }
     }
 }

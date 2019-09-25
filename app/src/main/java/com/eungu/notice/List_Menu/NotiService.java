@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,7 +43,7 @@ public class NotiService extends Service {
                 pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
             case 2:
-                mainIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataHelper.getStringData(SettingDataHelper.APP, null)));
+                mainIntent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(dataHelper.getStringData(SettingDataHelper.APP, null));
                 pendingIntent = PendingIntent.getActivity(getApplicationContext(), 945, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
             case 3:

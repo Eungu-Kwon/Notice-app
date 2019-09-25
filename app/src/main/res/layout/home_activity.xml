@@ -16,6 +16,7 @@
                 android:id="@+id/main_service_btn"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
+                android:layout_marginVertical="50dp"
                 android:src="@drawable/ic_launcher_foreground"
                 android:layout_gravity="center"
                 app:cb_color="#EC3743"
@@ -24,15 +25,14 @@
             <com.wajahatkarim3.easyflipview.EasyFlipView
                 android:id="@+id/main_card"
                 android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="40dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:flipOnTouch="false"
                 app:flipEnabled="true"
                 app:flipDuration="400"
                 app:flipType="horizontal"
-                app:flipFrom="right"
-                app:autoFlipBack="true"
-                app:autoFlipBackTime="1500">
+                app:flipFrom="right">
 
                 <include layout="@layout/card_rear"/>
                 <include layout="@layout/card_front"/>

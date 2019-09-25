@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#F2EEE5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -30,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/content_text"
         android:layout_marginTop="40dp"
+        android:background="#F88C65"
         android:text="조건 설정" />
 
     <FrameLayout
@@ -42,7 +44,8 @@
         android:id="@+id/done_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Set"
+        android:text="완료"
+        android:background="#FFC301"
         android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
