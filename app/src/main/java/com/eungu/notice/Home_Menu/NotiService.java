@@ -1,4 +1,4 @@
-package com.eungu.notice.List_Menu;
+package com.eungu.notice.Home_Menu;
 
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
@@ -9,10 +9,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.eungu.notice.DBManager.AlarmDBHelper;
 import com.eungu.notice.DBManager.DBData;
@@ -53,7 +55,7 @@ public class NotiService extends Service {
         }
 
 
-        builder.setSmallIcon(R.mipmap.ic_launcher)
+        builder.setSmallIcon(R.mipmap.ic_main_icon_foreground)
                 .setContentTitle(dataHelper.getStringData(SettingDataHelper.MAIN_TITLE, "알림 제목"))
                 .setContentText(dataHelper.getStringData(SettingDataHelper.MAIN_CONTENT, "문구를 변경하려면 터치"))
                 .setPriority(NotificationCompat.PRIORITY_MIN)

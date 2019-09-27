@@ -66,18 +66,21 @@ public class AlarmSettingActivity extends AppCompatActivity implements DateSetLi
                 case DBData.RING_ONCE:
                     fragment = new FragmentOnce();
                     b.putString("time", data.getTimeToText());
+                    setData(data.getTime(), -1, DBData.RING_ONCE, DBData.CONTENT_NORMAL);
                     fragment.setArguments(b);
                     break;
                 case DBData.RING_DAYOFWEEK:
                     fragment = new FragmentWeekOfDay();
                     b.putInt("r_data", data.getRingData());
                     b.putString("time", data.getTimeToText());
+                    setData(data.getTime(), data.getRingData(), DBData.RING_DAYOFWEEK, DBData.CONTENT_NORMAL);
                     fragment.setArguments(b);
                     break;
                 case DBData.RING_MONTH:
                     fragment = new FragmentMonth();
                     b.putInt("r_data", data.getRingData());
                     b.putString("time", data.getTimeToText());
+                    setData(data.getTime(), data.getRingData(), DBData.RING_MONTH, DBData.CONTENT_NORMAL);
                     fragment.setArguments(b);
                     break;
                 default:

@@ -1,11 +1,9 @@
 package com.eungu.notice.Extra;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.eungu.notice.DBManager.DBData;
-import com.eungu.notice.List_Menu.NotiService;
 
 import java.util.Calendar;
 

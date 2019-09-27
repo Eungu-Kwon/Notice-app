@@ -12,6 +12,8 @@ public class SettingDataHelper {
     public static final String URL = "internet";
     public static final String CALL = "phonecall";
     public static final String APP = "app";
+    public static final String PNAME = "peoplename";
+    public static final String APPNAME = "appname";
     Context context;
 
     public SettingDataHelper(Context context) {

@@ -8,9 +8,10 @@
         android:id="@+id/card_title_rear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="40dp"
+        android:textSize="30sp"
+        android:textAlignment="center"
         android:layout_centerHorizontal="true"
-        android:paddingTop="30dp"
+        android:paddingTop="60dp"
         android:textColor="#000000"
         android:text="탭해서 뒤집기" />
 
@@ -27,14 +28,6 @@
             android:layout_height="80dp"
             android:layout_weight="1"
             android:text="설정" />
-
-        <Button
-            android:id="@+id/card_btn2"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@android:color/transparent"
-            android:layout_weight="1"
-            android:text="아이콘 설정" />
     </LinearLayout>
 
 </RelativeLayout>

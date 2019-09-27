@@ -1,14 +1,12 @@
 package com.eungu.notice.Home_Menu;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -16,14 +14,14 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.eungu.notice.Extra.ComputeClass;
 import com.eungu.notice.Extra.SettingDataHelper;
-import com.eungu.notice.List_Menu.NotiService;
 import com.eungu.notice.R;
 
 public class NotiServiceSetting extends AppCompatActivity implements RadioButton.OnCheckedChangeListener, Button.OnClickListener {
     int category = 0;
-    static final String pNameStr = "peoplename";
     String pName;
+    String appName;
     EditText urlText;
     Button appButton;
     Button addressButton;
@@ -48,7 +46,8 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
         done_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataHelper.settingStringData(pNameStr, null);
+                dataHelper.settingStringData(SettingDataHelper.PNAME, null);
+                dataHelper.settingStringData(SettingDataHelper.APPNAME, null);
                 switch (category){
                     case 1:
                         String mUrl = urlText.getText().toString();
@@ -62,6 +61,11 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                         dataHelper.settingStringData(SettingDataHelper.URL, mUrl);
                         break;
                     case 2:
+                        if(appPackage == null || appPackage == ""){
+                            Toast.makeText(getApplicationContext(), "어플을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        dataHelper.settingStringData(SettingDataHelper.APPNAME, appName);
                         dataHelper.settingStringData(SettingDataHelper.APP, appPackage);
                         break;
                     case 3:
@@ -70,7 +74,7 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                             return;
                         }
                         dataHelper.settingStringData(SettingDataHelper.CALL, addressString);
-                        dataHelper.settingStringData(pNameStr, pName);
+                        dataHelper.settingStringData(SettingDataHelper.PNAME, pName);
                         break;
                 }
 
@@ -78,12 +82,14 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                 dataHelper.settingStringData(SettingDataHelper.MAIN_CONTENT, content.getText().toString());
                 dataHelper.settingStringData(SettingDataHelper.MAIN_CATEGORY, category+"");
 
-                Intent service = new Intent(v.getContext(), NotiService.class);
-                stopService(service);
-                if(Build.VERSION.SDK_INT >= 26)
-                    v.getContext().startForegroundService(service);
-                else
-                    v.getContext().startService(service);
+                if(ComputeClass.isLaunchingService(getApplicationContext())){
+                    Intent service = new Intent(v.getContext(), NotiService.class);
+                    stopService(service);
+                    if(Build.VERSION.SDK_INT >= 26)
+                        v.getContext().startForegroundService(service);
+                    else
+                        v.getContext().startService(service);
+                }
 
                 finish();
             }
@@ -114,6 +120,7 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                 break;
             case 2:
                 rb2.setChecked(true);
+                appPackage = dataHelper.getStringData(SettingDataHelper.APP, null);
                 break;
             case 3:
                 rb3.setChecked(true);
@@ -121,10 +128,12 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                 break;
         }
 
-        pName = dataHelper.getStringData(pNameStr, null);
+        pName = dataHelper.getStringData(SettingDataHelper.PNAME, null);
         if(pName != null){
             addressButton.setText(pName + "님께 전화");
         }
+        appName = dataHelper.getStringData(SettingDataHelper.APPNAME, null);
+        if(appName != null) appButton.setText(appName + " 실행");
     }
 
     void setButtons(){
@@ -194,7 +203,8 @@ public class NotiServiceSetting extends AppCompatActivity implements RadioButton
                     addressButton.setText(pName + "님께 전화");
                     break;
                 case 1:
-                    String appName = data.getStringExtra("appName");
+                    appName = data.getStringExtra("appName");
+                    appName = appName.replace("\n", " ");
                     appPackage = data.getStringExtra("appPackage");
                     appButton.setText(appName + " 실행");
                     break;

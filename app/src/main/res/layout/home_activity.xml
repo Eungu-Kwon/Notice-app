@@ -16,11 +16,12 @@
                 android:id="@+id/main_service_btn"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
-                android:layout_marginVertical="50dp"
-                android:src="@drawable/ic_launcher_foreground"
                 android:layout_gravity="center"
+                android:layout_marginVertical="50dp"
+                android:src="@drawable/ic_alarm_off_foreground"
                 app:cb_color="#EC3743"
                 app:cb_pressedRingWidth="16dp" />
+
 
             <com.wajahatkarim3.easyflipview.EasyFlipView
                 android:id="@+id/main_card"
